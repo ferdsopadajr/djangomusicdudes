@@ -1,9 +1,11 @@
 from copy import deepcopy
 import csv
+from datetime import timedelta
 from math import *
 import matplotlib.pyplot as plt
 import numpy as np
 from statistics import mean
+import time
 
 # K-Means Clustering Module
 
@@ -57,31 +59,12 @@ def plot_points():
 	plt.legend(loc = 4)
 	plt.show()
 
-'''
-x = {1: [0.011,0.696,0,2,0.302,-2.743,0.103,114.944],
-		 2: [0.022,0.932,0,11,0.093,-7.755,0.161,139.974],
-		 3: [0.942,0.717,0.85,1,0.139,-6.539,0.045,143.779]}
-
-quer = [0.514,0.735,0.09,5,0.159,-11.84,0.046,98.002]
-d = {k:[] for k,v in enumerate(quer)}
-
-for k in x:
-  for v in d:
-    print(quer[v],'-',x[k][v],'=',round(quer[v]-x[k][v],3))
-    d[v].append([k,abs(round(quer[v]-x[k][v],3))])
-  print('\n')
-print(d)
-
-for k in d:
-  print([i[0] for i in d[k] if i[1] == min([i[1] for i in d[k]])])
-  print('\n')
-'''
-
 def euclidean_distance(point, centroids = None, dim = '2d', query = None):
 	distance = {}
 	if dim == '1d':
 		# Get distance for each audio feature in the cluster
-		point.remove(query['id'])
+		if query['id'] in point:
+			point.remove(query['id'])
 		distance = {key:[] for key in query if key not in ['quadrant', 'track_name', 'id', 'genre', 'duration_ms', 'energy', 'mode', 'valence']}
 		
 		for track_id in point:
@@ -96,9 +79,8 @@ def euclidean_distance(point, centroids = None, dim = '2d', query = None):
 		freq = {item[0]:0 for item in minimum}
 		for item in minimum:
 			freq[item[0]] = [item[0] for item in minimum].count(item[0])
-		print('freq:',freq)
-		return [key for key in freq if freq[key] == max(freq.values())]
 
+		return [key for key in freq if freq[key] == max(freq.values())]
 	else:
 		# Get distance for each point to the centroids in the quadrant
 		cluster = 0
@@ -108,7 +90,7 @@ def euclidean_distance(point, centroids = None, dim = '2d', query = None):
 				cluster = key
 		return cluster
 
-def cluster_points(clusters, track_id):
+def cluster_points(k_count, track_id):
 	''' Pseudocode for this method
 			while songs_to_recommend != quota:
 				regenerate random points for centroids
@@ -121,45 +103,62 @@ def cluster_points(clusters, track_id):
 	# Get mood quadrant to start clustering
 	quadrant = determine_mood(read_file(track_id)[0])
 
-	# Run while loop until songs_to_recommend != quota
+	centroids = {}
 	songs_to_recommend = []
 
-	# Generate random points for centroids
-	centroids = {}
-	for count in range(clusters):
-		centroids[count] = [round(np.random.uniform(low = quadrant['v_low'], high = quadrant['v_high']), 3), round(np.random.uniform(low = quadrant['e_low'], high = quadrant['e_high']), 3)]
-	
-	# Start k-means clustering
-	clusters = {key:[] for key in centroids.keys()}
-	old_clusters = {}
-	diff = []
+	# Run while loop until songs_to_recommend != quota
+	start = time.time()
+	while len(songs_to_recommend) != 15:
+		# Generate random points for centroids
+		centroids.clear()
+		for count in range(k_count):
+			centroids[count] = [round(np.random.uniform(low = quadrant['v_low'], high = quadrant['v_high']), 3), round(np.random.uniform(low = quadrant['e_low'], high = quadrant['e_high']), 3)]
+		
+		# Start k-means clustering
+		clusters = {key:[] for key in centroids.keys()}
+		old_clusters = {}
+		diff = []
 
-	# Run while loop until none of the cluster assignments change
-	while True:
-		old_clusters = deepcopy(clusters) # Copy old clusters' values
-		clusters = {key:[] for key in clusters} # Reset clusters assignment
+		# Run while loop until none of the cluster assignments change
+		while True:
+			old_clusters = deepcopy(clusters) # Copy old clusters' values
+			clusters = {key:[] for key in clusters} # Reset clusters assignment
 
-		# Find nearest centroid for each data point using Euclidean Distance
-		for track in quadrant['data_points'][:35]:
-			point = [float(track['valence']), float(track['energy']), track['id']]
-			clusters[euclidean_distance(point, centroids)].append(point)
-		print('old_clus:', old_clusters)
-		print('clus:', clusters)
+			# Find nearest centroid for each data point using Euclidean Distance
+			for track in quadrant['data_points']:
+				point = [float(track['valence']), float(track['energy']), track['id']]
+				clusters[euclidean_distance(point, centroids)].append(point)
+			# print('old_clus:', old_clusters)
+			# print('clus:', clusters)
 
-		# Update centroids
-		for key in centroids:
-			if any(clusters[key]):
-				centroids[key][0] = round(mean(point[0] for point in clusters[key]), 3)
-				centroids[key][1] = round(mean(point[1] for point in clusters[key]), 3)
+			# Update centroids
+			for key in centroids:
+				if any(clusters[key]):
+					centroids[key][0] = round(mean(point[0] for point in clusters[key]), 3)
+					centroids[key][1] = round(mean(point[1] for point in clusters[key]), 3)
 
-		# Check change in clusters assignment
-		diff = [point for key in clusters for point in clusters[key] if point not in old_clusters[key]]
-		print('clusters_diff:\n', diff)
+			# Check change in clusters assignment
+			diff = [point for key in clusters for point in clusters[key] if point not in old_clusters[key]]
+			# print('clusters_diff:\n', diff)
 
-		if not diff:
-			break
+			if not diff:
+				break
 
-	# Similarity using other audio features
-	for track in euclidean_distance([point[2] for key in clusters for track in clusters[key] if track[2] == track_id for point in clusters[key]], dim = '1d', query = quadrant['feat']):
-		songs_to_recommend.append(track)
-	print('songs_to_recommend:', songs_to_recommend)
+		# Similarity using other audio features
+		for key in clusters:
+			if len(songs_to_recommend) != 15:
+				for track in euclidean_distance([track[2] for track in clusters[key]], dim = '1d', query = quadrant['feat']):
+					if len(songs_to_recommend) != 15:
+						if track not in songs_to_recommend:
+							songs_to_recommend.append(track)
+						print('len:',len(songs_to_recommend))
+					else:
+						break
+			else:
+				break
+
+	# Elapsed time in getting recommendations
+	print(centroids,timedelta(seconds = time.time() - start))
+
+	for item in songs_to_recommend:
+		print('songs_to_recommend:', item)
