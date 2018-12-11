@@ -19,15 +19,14 @@ def read_file(track_id = None):
 def determine_mood(row):
 	# Return mood quadrant of track
 	songs = read_file()
-	for feat in row:
-		if float(feat['valence']) > 0.5 and float(feat['energy']) >= 0.5:
-			return {'mood': 'happy', 'v_low': 0.501, 'v_high': 1.001, 'e_low': 0.5, 'e_high': 1.001, 'feat': feat, 'data_points': [feat for feat in songs if float(feat['valence']) > 0.5 and float(feat['energy']) >= 0.5]}
-		elif float(feat['valence']) <= 0.5 and float(feat['energy']) > 0.5:
-			return {'mood': 'angry', 'v_low': 0, 'v_high': 0.501, 'e_low': 0.501, 'e_high': 1.001, 'feat': feat, 'data_points': [feat for feat in songs if float(feat['valence']) > 0.5 and float(feat['energy']) >= 0.5]}
-		elif float(feat['valence']) >= 0.5 and float(feat['energy']) < 0.5:
-			return {'mood': 'peaceful', 'v_low': 0.5, 'v_high': 1.001, 'e_low': 0, 'e_high': 0.5, 'feat': feat, 'data_points': [feat for feat in songs if float(feat['valence']) > 0.5 and float(feat['energy']) >= 0.5]}
-		elif float(feat['valence']) < 0.5 and float(feat['energy']) <= 0.5:
-			return {'mood': 'sad', 'v_low': 0, 'v_high': 0.5, 'e_low': 0, 'e_high': 0.501, 'feat': feat, 'data_points': [feat for feat in songs if float(feat['valence']) > 0.5 and float(feat['energy']) >= 0.5]}
+	if float(row['valence']) > 0.5 and float(row['energy']) >= 0.5:
+		return {'mood': 'happy', 'v_low': 0.501, 'v_high': 1.001, 'e_low': 0.5, 'e_high': 1.001, 'feat': row, 'data_points': [feat for feat in songs if float(feat['valence']) > 0.5 and float(feat['energy']) >= 0.5]}
+	elif float(row['valence']) <= 0.5 and float(row['energy']) > 0.5:
+		return {'mood': 'angry', 'v_low': 0, 'v_high': 0.501, 'e_low': 0.501, 'e_high': 1.001, 'feat': row, 'data_points': [feat for feat in songs if float(feat['valence']) > 0.5 and float(feat['energy']) >= 0.5]}
+	elif float(row['valence']) >= 0.5 and float(row['energy']) < 0.5:
+		return {'mood': 'peaceful', 'v_low': 0.5, 'v_high': 1.001, 'e_low': 0, 'e_high': 0.5, 'feat': row, 'data_points': [feat for feat in songs if float(feat['valence']) > 0.5 and float(feat['energy']) >= 0.5]}
+	elif float(row['valence']) < 0.5 and float(row['energy']) <= 0.5:
+		return {'mood': 'sad', 'v_low': 0, 'v_high': 0.5, 'e_low': 0, 'e_high': 0.501, 'feat': row, 'data_points': [feat for feat in songs if float(feat['valence']) > 0.5 and float(feat['energy']) >= 0.5]}
 
 def plot_points():
 	# Energy + Valence Mapping - Plot points to their corresponding mood (Thayer's Mood Model)
@@ -81,13 +80,27 @@ for k in d:
 def euclidean_distance(point, centroids = None, dim = '2d', query = None):
 	distance = {}
 	if dim == '1d':
+		# Get distance for each audio feature in the cluster
 		point.remove(query['id'])
-		distance = {key:[] for key in query}
+		distance = {key:[] for key in query if key not in ['quadrant', 'track_name', 'id', 'genre', 'duration_ms', 'energy', 'mode', 'valence']}
+		
 		for track_id in point:
-			feats = read_file(track_id)
-			distance['acousticness'].append(abs(float(query['acousticness']) - float(feats[0]['acousticness'])))
-		print(distance['acousticness'], min(distance['acousticness']))
+			feats = read_file(track_id)[0]
+			for i in feats:
+				if i in ['quadrant', 'track_name', 'id', 'genre', 'duration_ms', 'energy', 'mode', 'valence']:
+					continue
+				distance[i].append([track_id, round(abs(float(query[i])-float(feats[i])),3)])
+
+		# Get the track with minimum distance for each audio feature
+		minimum = [track for key in distance for track in distance[key] if track[1] == min([track[1] for track in distance[key]])]
+		freq = {item[0]:0 for item in minimum}
+		for item in minimum:
+			freq[item[0]] = [item[0] for item in minimum].count(item[0])
+		print('freq:',freq)
+		return [key for key in freq if freq[key] == max(freq.values())]
+
 	else:
+		# Get distance for each point to the centroids in the quadrant
 		cluster = 0
 		for key in centroids:
 			distance[key] = sqrt(pow(abs(point[0] - centroids[key][0]), 2) + pow(abs(point[1] - centroids[key][1]), 2))
@@ -106,7 +119,7 @@ def cluster_points(clusters, track_id):
 	'''
 
 	# Get mood quadrant to start clustering
-	quadrant = determine_mood(read_file(track_id))
+	quadrant = determine_mood(read_file(track_id)[0])
 
 	# Run while loop until songs_to_recommend != quota
 	songs_to_recommend = []
@@ -127,7 +140,7 @@ def cluster_points(clusters, track_id):
 		clusters = {key:[] for key in clusters} # Reset clusters assignment
 
 		# Find nearest centroid for each data point using Euclidean Distance
-		for track in quadrant['data_points'][:15]:
+		for track in quadrant['data_points'][:35]:
 			point = [float(track['valence']), float(track['energy']), track['id']]
 			clusters[euclidean_distance(point, centroids)].append(point)
 		print('old_clus:', old_clusters)
@@ -147,4 +160,6 @@ def cluster_points(clusters, track_id):
 			break
 
 	# Similarity using other audio features
-	euclidean_distance([point[2] for key in clusters for track in clusters[key] if track[2] == track_id for point in clusters[key]], dim = '1d', query = quadrant['feat'])
+	for track in euclidean_distance([point[2] for key in clusters for track in clusters[key] if track[2] == track_id for point in clusters[key]], dim = '1d', query = quadrant['feat']):
+		songs_to_recommend.append(track)
+	print('songs_to_recommend:', songs_to_recommend)
