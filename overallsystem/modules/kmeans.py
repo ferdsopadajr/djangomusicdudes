@@ -160,7 +160,7 @@ def elbow_method(quadrant):
 	plt.title('Elbow Method For Optimal K')
 	plt.show()
 
-def cluster_points(k_count, track_id):
+def cluster_points(track_id):
 	''' Pseudocode for this method
 			while songs_to_recommend != quota:
 				regenerate random points for centroids
@@ -183,7 +183,7 @@ def cluster_points(k_count, track_id):
 	while len(songs_to_recommend) != 10:
 		
 		# Start K-means clustering
-		clusters = k_means(quadrant, k_count)
+		clusters = k_means(quadrant)
 
 		# Similarity using other audio features
 		for key in clusters:
