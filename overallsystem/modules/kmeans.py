@@ -174,8 +174,7 @@ def cluster_points(track_id):
 	quadrant = determine_mood(read_file(track_id)[0])
 
 	# Elbow method to determine clusters count
-	sse = elbow_method(quadrant)
-	
+	# sse = elbow_method(quadrant)
 
 	# Run while loop until songs_to_recommend != quota
 	songs_to_recommend = []
