@@ -1,0 +1,70 @@
+$sidebar-bg: rgb(54, 39, 60);
+$primary: #fff;
+$secondary: rgb(202, 192, 201);
+$actv-bdr: rgb(254, 214, 103);
+$brand-sec: rgb(43, 91, 132);
+
+@mixin left-bdr($color) {
+	content: "";
+	position: absolute;
+	top: 5px;
+	bottom: 5px;
+	width: 4px;
+	left: 0;
+	background-color: $color;
+}
+
+#sidebar-wrapper {
+	background: $sidebar-bg;
+	z-index: 1000;
+	position: fixed;
+  width: 200px;
+  height: 100%;
+}
+
+.sidebar-nav {
+	width: 200px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	.sidebar-brand {
+		height: 50px;
+		font-weight: 700;
+		font-size: 26px;
+		line-height: 50px;
+		a {
+			color: $actv-bdr;
+			span {
+				color: $brand-sec;
+			}
+		}
+	}
+	.active {
+		a, &:active, :focus {
+			color: $primary !important;
+		}
+		a:after {
+			@include left-bdr($actv-bdr !important);
+		}
+	}
+	li {
+		position: relative;
+		text-indent: 20px;
+		line-height: 40px;
+		a {
+			color: $secondary;
+			display: block;
+			text-decoration: none;
+		}
+		&:not(:first-child) {
+			a {
+				&:after {
+					@include left-bdr($sidebar-bg);
+				}
+				&:hover {
+					color: $primary;
+				}
+			}
+		}
+	}
+}

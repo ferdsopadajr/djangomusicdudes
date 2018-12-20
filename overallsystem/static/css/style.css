@@ -1,0 +1,60 @@
+#sidebar-wrapper {
+  background: #36273c;
+  z-index: 1000;
+  position: fixed;
+  width: 200px;
+  height: 100%;
+}
+
+.sidebar-nav {
+  width: 200px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sidebar-nav .sidebar-brand {
+  height: 50px;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 50px;
+}
+.sidebar-nav .sidebar-brand a {
+  color: #fed667;
+}
+.sidebar-nav .sidebar-brand a span {
+  color: #2b5b84;
+}
+.sidebar-nav .active a, .sidebar-nav .active:active, .sidebar-nav .active :focus {
+  color: #fff !important;
+}
+.sidebar-nav .active a:after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  width: 4px;
+  left: 0;
+  background-color: #fed667 !important;
+}
+.sidebar-nav li {
+  position: relative;
+  text-indent: 20px;
+  line-height: 40px;
+}
+.sidebar-nav li a {
+  color: #cac0c9;
+  display: block;
+  text-decoration: none;
+}
+.sidebar-nav li:not(:first-child) a:after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  width: 4px;
+  left: 0;
+  background-color: #36273c;
+}
+.sidebar-nav li:not(:first-child) a:hover {
+  color: #fff;
+}

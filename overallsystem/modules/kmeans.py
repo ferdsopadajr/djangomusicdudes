@@ -67,7 +67,7 @@ def calc_dist(tracks, query):
 		for i in feats:
 			if i in ['track_name', 'id', 'genre', 'duration_ms', 'energy', 'mode', 'valence']:
 				continue
-			distance[i].append([track_id, round(abs(float(query[i])-float(feats[i])),3)])
+			distance[i].append([track_id, np.linalg.norm(float(query[i]) - float(feats[i]))])
 	return distance
 
 def get_min(distance):
@@ -93,7 +93,7 @@ def euclidean_distance(point, centroids = None, dim = '2d', query = None):
 		# Get distance for each point to the centroids in the quadrant
 		cluster = 0
 		for key in centroids:
-			distance[key] = sqrt(pow(abs(point[0] - centroids[key][0]), 2) + pow(abs(point[1] - centroids[key][1]), 2))
+			distance[key] = np.linalg.norm(np.array(point[:2]) - np.array(centroids[key]))
 			if min(distance.values()) == distance[key]:
 				cluster = key
 		return cluster
