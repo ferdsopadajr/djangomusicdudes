@@ -1,5 +1,5 @@
 {% extends 'overallsystem/layout.html' %}
-{% block content %}
+{% block sidebar %}
 
 <!-- Sidebar -->
 <div id="sidebar-wrapper">
@@ -7,20 +7,66 @@
 		<li class="sidebar-brand">
 			<a href="">Music<span>Dudes</span></a>
 		</li>
-		<div class="sidebar-item">
-			<li class="active">
-				<a href="#browse">Browse</a>
-			</li>
-			<li>
-				<a href="#playlists">Playlists</a>
-			</li>
-			<li>
-				<a href="#favorites">Favorites</a>
-			</li>
-		</div>
+		<li class="active">
+			<a href="#browse"><i class="fas fa-home"></i>Browse</a>
+		</li>
+		<li>
+			<a href="#playlists"><i class="fas fa-folders"></i>Playlists</a>
+		</li>
+		<li>
+			<a href="#favorites"><i class="fas fa-heart"></i>Favorites</a>
+		</li>
 	</ul>
+	<div class="cr_pl">
+		<a href="#create_playlist"><i class="fas fa-plus-circle"></i>Create Playlist</a>
+	</div>
 </div>
-
+<!-- Controls Bar -->
+<div class="controls-bar">
+	<div class="controls-bar-left">
+		<div class="now-playing">
+			<span draggable="true">
+				<a href="#now-playing">
+					<div class="cover-shadow">
+						<div class="cover-img"></div>
+					</div>
+				</a>
+			</span>
+			<div class="track-info ellipsis-one-line">
+				<div class="track-info-name ellipsis-one-line">
+					<div class="context-wrapper">
+						<span>
+							<a href="#now-playing-name">Track Name</a>
+						</span>
+					</div>
+				</div>
+				<div class="track-info-artists ellipsis-one-line">
+					<div class="context-wrapper">
+						<span>
+							<a href="#now-playing-artists">Artists</a>
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="button-add">
+				<button class="far fa-plus" title="Add to Playlist"></button>
+				<button class="far fa-heart" title="Add to Favorites"></button>
+			</div>
+		</div>
+	</div>
+	<div class="controls-bar-center">
+		<div class="player-controls">
+			<div class="player-controls-buttons">
+				<button class="fal fa-random"></button>
+				<button class="fal fa-step-backward"></button>
+				<button class="fas fa-play"></button>
+				<button class="fal fa-step-forward"></button>
+				<button class="fal fa-repeat-alt"></button>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
 <!-- code goes here -->
 <!-- <form method="get" autocomplete="off" class="text-center">
 	{{ form }}
@@ -44,7 +90,3 @@
 		</div>
 	</div>
 </div> -->
-
-
-
-{% endblock %}

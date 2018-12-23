@@ -1,37 +1,90 @@
-$sidebar-bg: rgb(54, 39, 60);
+$sidebar-bg: #36273c;
 $primary: #fff;
-$secondary: rgb(202, 192, 201);
-$actv-bdr: rgb(254, 214, 103);
-$brand-sec: rgb(43, 91, 132);
+$secondary: #cac0c9;
+$actv-bdr: #fed667;
+$brand-sec: #2b5b84;
+$controls: #3d2d47;
 
 @mixin left-bdr($color) {
 	content: "";
 	position: absolute;
+	background-color: $color;
+	width: 4px;
 	top: 5px;
 	bottom: 5px;
-	width: 4px;
 	left: 0;
-	background-color: $color;
+}
+@mixin button-pty{
+	position: relative;
+	background: none;
+	border: none;
+	outline: none;
+	height: 24px;
+	width: 32px;
+	min-width: 32px;
+	padding: 0;
+	color: $secondary;
+	&:hover {
+		color: $primary;
+	}
+}
+%align {
+	display: flex;
+	padding: 0 24px;
+	align-items: center;
+	i {
+		height: 24px;
+		width: 24px;
+		line-height: 24px;
+		text-align: center;
+		font-size: 18px;
+		margin-right: 15px;
+	}
 }
 
+/* sidebar */
 #sidebar-wrapper {
+	position: absolute;
 	background: $sidebar-bg;
-	z-index: 1000;
-	position: fixed;
-  width: 200px;
-  height: 100%;
+	height: 100%;
+  width: 215px;
+  display: flex;
+  flex-direction: column;
+	padding-bottom: 90px;
+	/* create playlist */
+	.cr_pl {
+		height: 50px;
+		line-height: 50px;
+		border-top: 1px solid #47384d;
+		a {
+			@extend %align;
+			&:hover {
+				color: $primary;
+			}
+		}
+	}
+}
+
+a {
+	color: $secondary;
+	text-decoration: none;
+	&:hover {
+		color: $primary;
+		text-decoration: none;
+	}
 }
 
 .sidebar-nav {
-	width: 200px;
+	list-style: none;
+	flex: 1;
 	margin: 0;
 	padding: 0;
-	list-style: none;
 	.sidebar-brand {
-		height: 50px;
+		height: 70px;
+		line-height: 70px;
 		font-weight: 700;
 		font-size: 26px;
-		line-height: 50px;
+		padding: 0 24px;
 		a {
 			color: $actv-bdr;
 			span {
@@ -40,24 +93,25 @@ $brand-sec: rgb(43, 91, 132);
 		}
 	}
 	.active {
-		a, &:active, :focus {
-			color: $primary !important;
-		}
-		a:after {
-			@include left-bdr($actv-bdr !important);
+		a {
+			i {
+				color: $brand-sec;
+			}
+			&, &:active, &:focus {
+				color: $primary !important;
+			}
+			&:after {
+				@include left-bdr($actv-bdr !important);
+			}
 		}
 	}
 	li {
 		position: relative;
-		text-indent: 20px;
+		height: 40px;
 		line-height: 40px;
-		a {
-			color: $secondary;
-			display: block;
-			text-decoration: none;
-		}
 		&:not(:first-child) {
 			a {
+				@extend %align;
 				&:after {
 					@include left-bdr($sidebar-bg);
 				}
@@ -67,4 +121,108 @@ $brand-sec: rgb(43, 91, 132);
 			}
 		}
 	}
+}
+/* controls */
+.controls-bar {
+	position: fixed;
+	background: $controls;
+	height: 90px;
+	width: 100%;
+	display: flex;
+	padding: 0 18px;
+	bottom: 0;
+	align-items: center;
+	.controls-bar-left {
+		width: 30%;
+		min-width: 180px;
+		.now-playing {
+			display: flex;
+			align-items: center;
+			a {
+				.cover-shadow {
+					position: relative;
+					box-shadow: 0 0 10px rgba(0, 0, 0, .3);
+					height: 56px;
+					width: 56px;
+					.cover-img {
+						position: absolute;
+						background: url('https://i.scdn.co/image/3e86312ee46f6f7c0e96dbc4be42fb07ac0ea7df') no-repeat;
+						background-size: cover;
+						height: 100%;
+						width: 100%;
+						border: none;
+					}
+				}
+			}
+			.track-info {
+				font-size: 14px;
+				line-height: 20px;
+				letter-spacing: .015em;
+				margin: 0 14px;
+				.track-info-name {
+					color: $primary;
+					.context-wrapper {
+						display: inline;
+						a {
+							color: $primary;
+						}
+					}
+				}
+				.track-info-artists {
+					color: $secondary;
+					font-size: 12px;
+					line-height: 16px;
+					letter-spacing: .015em;
+					.context-wrapper {
+						display: inline;
+					}
+				}
+			}
+			.button-add {
+				display: flex;
+				flex-direction: column;
+				button {
+					@include button-pty;
+				}
+			}
+		}
+	}
+	.controls-bar-center {
+		width: 40%;
+		max-width: 722px;
+		.player-controls {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			.player-controls-buttons {
+				display: flex;
+				margin-bottom: 12px;
+				width: 224px;
+				justify-content: space-between;
+				align-items: center;
+				button {
+					@include button-pty;
+					&.fas.fa-play:after {
+						content: "";
+						position: absolute;
+						top: 0;
+						right: 0;
+						bottom: 0;
+						left: 0;
+						border-radius: 100%;
+						border: 1px solid #cac0c999;
+					}
+					&.fas.fa-play {
+						height: 32px;
+						padding-left: 2px;
+					}
+				}
+			}
+		}
+	}
+}
+.ellipsis-one-line {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
