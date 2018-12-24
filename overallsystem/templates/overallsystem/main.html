@@ -18,7 +18,7 @@
 		</li>
 	</ul>
 	<div class="cr_pl">
-		<a href="#create_playlist"><i class="fas fa-plus-circle"></i>Create Playlist</a>
+		<a href="#create_playlist"><i class="far fa-plus-circle"></i>Create Playlist</a>
 	</div>
 </div>
 <!-- Controls Bar -->
@@ -49,19 +49,35 @@
 				</div>
 			</div>
 			<div class="button-add">
-				<button class="far fa-plus" title="Add to Playlist"></button>
-				<button class="far fa-heart" title="Add to Favorites"></button>
+				<button class="fal fa-plus" title="Add to Playlist"></button>
+				<button class="fal fa-heart" title="Add to Favorites"></button>
 			</div>
 		</div>
 	</div>
 	<div class="controls-bar-center">
-		<div class="player-controls">
-			<div class="player-controls-buttons">
-				<button class="fal fa-random"></button>
-				<button class="fal fa-step-backward"></button>
-				<button class="fas fa-play"></button>
-				<button class="fal fa-step-forward"></button>
-				<button class="fal fa-repeat-alt"></button>
+		<div class="player-controls-buttons">
+			<button class="fal fa-random" title="Enable shuffle"></button>
+			<button class="fal fa-step-backward" title="Previous"></button>
+			<button class="fas fa-play" title="Play"></button>
+			<button class="fal fa-step-forward" title="Next"></button>
+			<button class="fal fa-repeat-alt" title="Enable repeat"></button>
+		</div>
+		<div class="playback-bar">
+			<div class="playback-bar-progress-time">0:18</div>
+			<div class="progress">
+				<div class="progress-bar" role="progressbar" style="width: 40%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+			</div>
+			<div class="playback-bar-progress-time">3:00</div>
+		</div>
+	</div>
+	<div class="controls-bar-right">
+		<div class="extra-controls">
+			<button class="fal fa-list" title="Queue"></button>
+			<div class="volume-bar">
+				<button class="fal fa-volume" aria-label="Mute"></button>
+				<div class="progress">
+					<div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+				</div>
 			</div>
 		</div>
 	</div>

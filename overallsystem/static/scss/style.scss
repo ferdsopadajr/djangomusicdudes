@@ -14,7 +14,7 @@ $controls: #3d2d47;
 	bottom: 5px;
 	left: 0;
 }
-@mixin button-pty{
+@mixin btn-pty{
 	position: relative;
 	background: none;
 	border: none;
@@ -40,6 +40,11 @@ $controls: #3d2d47;
 		font-size: 18px;
 		margin-right: 15px;
 	}
+}
+
+body {
+	font-size: 14px;
+	letter-spacing: .015em;
 }
 
 /* sidebar */
@@ -128,6 +133,7 @@ a {
 	background: $controls;
 	height: 90px;
 	width: 100%;
+	min-width: 620px;
 	display: flex;
 	padding: 0 18px;
 	bottom: 0;
@@ -155,9 +161,7 @@ a {
 				}
 			}
 			.track-info {
-				font-size: 14px;
 				line-height: 20px;
-				letter-spacing: .015em;
 				margin: 0 14px;
 				.track-info-name {
 					color: $primary;
@@ -182,39 +186,106 @@ a {
 				display: flex;
 				flex-direction: column;
 				button {
-					@include button-pty;
+					@include btn-pty;
 				}
 			}
 		}
 	}
 	.controls-bar-center {
+		color: $secondary;
 		width: 40%;
 		max-width: 722px;
-		.player-controls {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		.player-controls-buttons {
 			display: flex;
-			flex-direction: column;
+			margin-bottom: 12px;
+			width: 224px;
+			justify-content: space-between;
 			align-items: center;
-			.player-controls-buttons {
-				display: flex;
-				margin-bottom: 12px;
-				width: 224px;
-				justify-content: space-between;
-				align-items: center;
-				button {
-					@include button-pty;
-					&.fas.fa-play:after {
-						content: "";
-						position: absolute;
-						top: 0;
-						right: 0;
-						bottom: 0;
-						left: 0;
-						border-radius: 100%;
-						border: 1px solid #cac0c999;
+			button {
+				@include btn-pty;
+				&.fas.fa-play:after {
+					content: "";
+					position: absolute;
+					top: 0;
+					right: 0;
+					bottom: 0;
+					left: 0;
+					border-radius: 100%;
+					border: 1px solid #cac0c999;
+				}
+				&.fas.fa-play {
+					height: 32px;
+					padding-left: 1px;
+					transition: none 33ms cubic-bezier(.3,0,.7,1);
+					transition-property: all;
+					&.fas.fa-play:hover {
+						&:after {
+							border-color: $primary;
+						}
+						transition: none 33ms cubic-bezier(.3,0,0,1);
+						transition-property: all;
+						transform: scale(1.06);
 					}
-					&.fas.fa-play {
-						height: 32px;
-						padding-left: 2px;
+				}
+			}
+		}
+		.playback-bar {
+			width: 100%;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			.playback-bar-progress-time {
+				font-size: 11px;
+				line-height: 16px;
+				min-width: 40px;
+				text-align: center;
+			}
+			.progress {
+				background: #544e59;
+				height: 4px;
+				width: 100%;
+				.progress-bar {
+					// transition-duration: .1s;
+					// transition-property: background-color;
+					// transition-timing-function: cubic-bezier(1,0,.7,1);
+					background: $secondary;
+					height: 4px;
+					border-radius: .25em;
+				}
+			}
+		}
+	}
+	.controls-bar-right {
+		width: 30%;
+		min-width: 180px;
+		display: flex;
+		justify-content: flex-end;
+		.extra-controls {
+			width: 180px;
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			button {
+				@include btn-pty;
+			}
+			.volume-bar {
+				width: 136px;
+				display: flex;
+				align-items: center;
+				.progress {
+					background: #544e59;
+					height: 4px;
+					width: 100%;
+					.progress-bar {
+						// transition-duration: .1s;
+						// transition-property: background-color;
+						// transition-timing-function: cubic-bezier(1,0,.7,1);
+						background: $secondary;
+						height: 4px;
+						border-radius: .25em;
 					}
 				}
 			}
