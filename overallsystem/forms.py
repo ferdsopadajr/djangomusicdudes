@@ -1,4 +1,5 @@
-from django import forms
+from django.forms import *
 
-class MainForm(forms.Form):
-	track_id = forms.CharField(label = 'Track ID Query')
+class MainForm(Form):
+	track_id = CharField(label = 'Track ID Query')
+	search = CharField(required = False, widget = TextInput(attrs = {'class' : 'form-control', 'label' : 'Search', 'placeholder' : 'Search'}))

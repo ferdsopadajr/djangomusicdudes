@@ -21,6 +21,24 @@
 		<a href="#create_playlist"><i class="far fa-plus-circle"></i>Create Playlist</a>
 	</div>
 </div>
+<!-- Top Bar -->
+<div class="top-bar">
+	<div class="search">
+		<div class="input-group">
+			{{ form.search }}
+			<div class="input-group-append">
+				<i class="input-group-text fal fa-search"></i>
+			</div>
+		</div>
+	</div>
+	<div class="btn-group">
+		<button class="btn dropdown-toggle fal fa-user-circle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">username</button>
+		<div class="dropdown-menu dropdown-menu-right">
+			<button class="dropdown-item" type="button">Account</button>
+			<button class="dropdown-item" type="button">Log Out</button>
+		</div>
+	</div>
+</div>
 <!-- Controls Bar -->
 <div class="controls-bar">
 	<div class="controls-bar-left">
@@ -72,12 +90,58 @@
 	</div>
 	<div class="controls-bar-right">
 		<div class="extra-controls">
-			<button class="fal fa-list" title="Queue"></button>
+			<button class="fal fa-bars" title="Queue"></button>
 			<div class="volume-bar">
 				<button class="fal fa-volume" aria-label="Mute"></button>
 				<div class="progress">
 					<div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
 				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Main View -->
+<div class="main-view">
+	<div class="all-songs">
+		<div class="all-songs-title">
+			<h5>All Songs</h5>
+		</div>
+		<div class="songs-container">
+			<div class="song-bdr-top">
+				<h6>Listens</h6>
+				<h6>Ratings</h6>
+			</div>
+			<div class="song">
+				<button class="fas fa-play"></button>
+				<div class="song-info">
+					<div class="song-info-name">Track Name</div>
+					<div class="song-info-artists">Artists</div>
+				</div>
+				<div class="song-duration">0:00</div>
+				<div class="button-add">
+					<button class="fal fa-heart" title="Add to Favorites"></button>
+					<button class="fal fa-plus" title="Add to Playlist"></button>
+				</div>
+				<div class="listens-ratings">
+					<div class="listens">00001</div>
+					<div class="ratings">100%</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="rec">
+		<div class="rec-title">
+			<h5>Suggested Songs</h5>
+		</div>
+		<div class="rec-container">
+			<div class="song-bdr-top"></div>
+			<div class="song">
+				<button class="fas fa-play"></button>
+				<div class="song-info">
+					<div class="song-info-name">Track Name</div>
+					<div class="song-info-artists">Artists</div>
+				</div>
+				<div class="song-duration">0:00</div>
 			</div>
 		</div>
 	</div>
