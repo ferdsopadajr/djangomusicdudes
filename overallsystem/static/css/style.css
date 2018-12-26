@@ -12,6 +12,13 @@
   margin-right: 15px;
 }
 
+.controls-bar .controls-bar-left .now-playing .track-info, .controls-bar .controls-bar-left .now-playing .track-info .track-info-name, .controls-bar .controls-bar-left .now-playing .track-info .track-info-artists, .main-view .all-songs .songs-container .song .song-info .song-info-name, .main-view .all-songs .songs-container .song .song-info .song-info-artists, .main-view .rec .rec-container .song .song-info .song-info-name, .main-view .rec .rec-container .song .song-info .song-info-artists {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: 0s;
+}
+
 body {
   color: #cac0c9;
   font-size: 14px;
@@ -21,10 +28,10 @@ body {
 /* sidebar */
 #sidebar-wrapper {
   position: fixed;
+  display: flex;
   background: #36273c;
   height: 100%;
   width: 215px;
-  display: flex;
   flex-direction: column;
   padding-bottom: 90px;
   /* create playlist */
@@ -102,14 +109,15 @@ a:hover {
 /* top bar */
 .top-bar {
   position: fixed;
-  z-index: -1;
+  display: flex;
   background: #433047;
   height: 50px;
   width: 100%;
+  z-index: -1;
   min-width: 1280px;
-  display: flex;
   padding: 0 410px 0 230px;
   align-items: center;
+  user-select: none;
 }
 .top-bar .search {
   width: 50%;
@@ -186,14 +194,15 @@ a:hover {
 /* controls bar */
 .controls-bar {
   position: fixed;
+  display: flex;
   background: #402f4c;
   height: 90px;
   width: 100%;
   min-width: 620px;
-  display: flex;
   padding: 0 18px;
   bottom: 0;
   align-items: center;
+  user-select: none;
 }
 .controls-bar .controls-bar-left {
   width: 30%;
@@ -373,27 +382,22 @@ a:hover {
   border-radius: .25em;
 }
 
-.ellipsis-one-line {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 /* main view */
 .main-view {
   position: absolute;
   display: flex;
+  background: inherit;
+  height: 80%;
+  width: 100%;
   top: 50px;
   z-index: -2;
-  background: #49384a;
-  height: 100%;
-  width: 100%;
-  min-width: 1280px;
   padding-left: 215px;
 }
 .main-view .all-songs {
+  background: linear-gradient(#49384a, #947696, #49384a);
   overflow: auto;
   width: 65%;
+  padding-bottom: 15px;
 }
 .main-view .all-songs .all-songs-title {
   display: flex;
@@ -403,7 +407,6 @@ a:hover {
   padding-left: 15px;
 }
 .main-view .all-songs .songs-container {
-  height: 100%;
   width: 100%;
   padding: 0 25px;
 }
@@ -424,6 +427,7 @@ a:hover {
   align-items: center;
   height: 50px;
   width: 100%;
+  user-select: none;
 }
 .main-view .all-songs .songs-container .song button {
   background: none;
@@ -439,6 +443,7 @@ a:hover {
   flex-direction: column;
   width: 48%;
   padding-right: 15px;
+  overflow: hidden;
 }
 .main-view .all-songs .songs-container .song .song-info .song-info-name {
   color: #fff;
@@ -469,10 +474,14 @@ a:hover {
 .main-view .all-songs .songs-container .song .listens-ratings div {
   width: 50%;
 }
+.main-view .all-songs .songs-container .song:hover {
+  background: rgba(67, 48, 71, 0.5);
+}
 .main-view .rec {
   overflow: auto;
-  background: #614e62;
+  background: linear-gradient(#614e62, #958196, #614e62);
   width: 35%;
+  padding-bottom: 15px;
 }
 .main-view .rec .rec-title {
   display: flex;
@@ -482,7 +491,6 @@ a:hover {
   padding-left: 15px;
 }
 .main-view .rec .rec-container {
-  height: 100%;
   width: 100%;
   padding: 0 25px;
 }
@@ -496,6 +504,7 @@ a:hover {
   align-items: center;
   height: 50px;
   width: 100%;
+  user-select: none;
 }
 .main-view .rec .rec-container .song button {
   background: none;
@@ -511,6 +520,7 @@ a:hover {
   flex-direction: column;
   width: 80%;
   padding-right: 15px;
+  overflow: hidden;
 }
 .main-view .rec .rec-container .song .song-info .song-info-name {
   color: #fff;
@@ -524,4 +534,7 @@ a:hover {
   height: 20px;
   width: 10%;
   font-size: 13px;
+}
+.main-view .rec .rec-container .song:hover {
+  background: rgba(67, 48, 71, 0.5);
 }

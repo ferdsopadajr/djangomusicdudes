@@ -50,15 +50,15 @@
 					</div>
 				</a>
 			</span>
-			<div class="track-info ellipsis-one-line">
-				<div class="track-info-name ellipsis-one-line">
+			<div class="track-info">
+				<div class="track-info-name">
 					<div class="context-wrapper">
 						<span>
 							<a href="#now-playing-name">Track Name</a>
 						</span>
 					</div>
 				</div>
-				<div class="track-info-artists ellipsis-one-line">
+				<div class="track-info-artists">
 					<div class="context-wrapper">
 						<span>
 							<a href="#now-playing-artists">Artists</a>
@@ -111,11 +111,12 @@
 				<h6>Listens</h6>
 				<h6>Ratings</h6>
 			</div>
+			{% for track in songs %}
 			<div class="song">
 				<button class="fas fa-play"></button>
 				<div class="song-info">
-					<div class="song-info-name">Track Name</div>
-					<div class="song-info-artists">Artists</div>
+					<div class="song-info-name">{{ track.track_name }}</div>
+					<div class="song-info-artists">{{ track.artists }}</div>
 				</div>
 				<div class="song-duration">0:00</div>
 				<div class="button-add">
@@ -127,6 +128,7 @@
 					<div class="ratings">100%</div>
 				</div>
 			</div>
+			{% endfor %}
 		</div>
 	</div>
 	<div class="rec">
@@ -135,38 +137,17 @@
 		</div>
 		<div class="rec-container">
 			<div class="song-bdr-top"></div>
+			{% for track in rec_songs %}
 			<div class="song">
 				<button class="fas fa-play"></button>
 				<div class="song-info">
-					<div class="song-info-name">Track Name</div>
-					<div class="song-info-artists">Artists</div>
+					<div class="song-info-name">{{ track.track_name }}</div>
+					<div class="song-info-artists">{{ track.artists }}</div>
 				</div>
 				<div class="song-duration">0:00</div>
 			</div>
+			{% endfor %}
 		</div>
 	</div>
 </div>
 {% endblock %}
-<!-- code goes here -->
-<!-- <form method="get" autocomplete="off" class="text-center">
-	{{ form }}
-	<button type="submit" class="btn btn-primary">Submit</button>
-</form>
-<div class="row">
-	<div class="col-md-6">
-		<div class="text-center">
-			<h3>Songs</h3>
-			{% for track in songs %}
-				{{ track }}
-			{% endfor %}
-		</div>
-	</div>
-	<div class="col-md-6">
-		<div class="text-center">
-			<h3>Recommended Songs</h3>
-			{% for track in rec_songs %}
-				<div>{{ track }}</div>
-			{% endfor %}
-		</div>
-	</div>
-</div> -->

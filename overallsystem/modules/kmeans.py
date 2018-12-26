@@ -65,9 +65,8 @@ def calc_dist(tracks, query):
 	for track_id in tracks:
 		feats = read_file(track_id)[0]
 		for i in feats:
-			if i in ['track_name', 'id', 'genre', 'duration_ms', 'energy', 'mode', 'valence']:
-				continue
-			distance[i].append([track_id, np.linalg.norm(float(query[i]) - float(feats[i]))])
+			if i not in ['track_name', 'artists', 'id', 'genre', 'duration_ms', 'energy', 'mode', 'valence']:
+				distance[i].append([track_id, np.linalg.norm(float(query[i]) - float(feats[i]))])
 	return distance
 
 def get_min(distance):
@@ -226,4 +225,4 @@ def cluster_points(track_id):
 		item[1] = round(mean(x for x in item[1]), 3)
 
 	# Return sorted recommendations
-	return [item[0] for item in sorted(sorted_rec, key = lambda item : item[1])]
+	return [read_file(track_id)[0] for track_id in [item[0] for item in sorted(sorted_rec, key = lambda item : item[1])]]
