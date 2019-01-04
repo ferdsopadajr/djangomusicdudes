@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound
+from django.views.decorators.csrf import csrf_exempt
 from overallsystem.modules.kmeans import cluster_points, read_file
 from .forms import MainForm as mf
 
@@ -18,3 +19,8 @@ def main(request):
 		return render(request, 'overallsystem/main.html', {'form': mf(), 'songs': songs, 'rec_songs': rec_songs})
 	else:
 		return HttpResponseNotFound('<h1>Page not found</h1>')
+
+@csrf_exempt
+def gen_rec(request):
+	rec_songs = cluster_points(request.POST['track_id'])
+	return render(request, 'overallsystem/recommendations.html', {'rec_songs': rec_songs})

@@ -392,6 +392,7 @@ a {
 		background: linear-gradient(#49384a, #947696, #49384a);
 		overflow: auto;
 		width: 65%;
+		min-width: 748.14px;
 		padding-bottom: 15px;
 		.all-songs-title {
 			display: flex;
@@ -478,6 +479,7 @@ a {
 		overflow: auto;
 		background: linear-gradient(#614e62, #958196, #614e62);
 		width: 35%;
+		min-width: 402.84px;
 		padding-bottom: 15px;
 		.rec-title {
 			display: flex;
