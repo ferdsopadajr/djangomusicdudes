@@ -15,4 +15,13 @@ $(function() {
 			}
 		);
 	})
+
+	$('#account').click(function() {
+		$.get(
+			'/account/',
+			function(data) {
+				$('.main-view').html(data);
+			}
+		)
+	})
 });

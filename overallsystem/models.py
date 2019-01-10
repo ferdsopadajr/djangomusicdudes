@@ -1,11 +1,14 @@
 from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Create your models here.
 class Profiles(models.Model):
 	user = models.CharField(max_length=100, primary_key=True)
-	pref_mean_x = models.FloatField(null=True, validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
-	pref_mean_y = models.FloatField(null=True, validators=[MinValueValidator(0.0), MaxValueValidator(1.0)])
+	pref_mean_x = models.FloatField(null=True)
+	pref_mean_y = models.FloatField(null=True)
+
+class Tracks(models.Model):
+	listens = models.IntegerField(default=0)
+	ratings = models.FloatField(default=0)
 
 class Playlists(models.Model):
 	user = models.ForeignKey(Profiles, on_delete=models.CASCADE)

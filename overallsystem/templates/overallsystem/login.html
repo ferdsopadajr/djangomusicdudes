@@ -15,7 +15,6 @@
 					{% endif %}
 					<form class="login-form" method="post" action="/login/">
 						{% csrf_token %}
-						<input type="hidden" name="next" value="{{ next }}">
 						<div class="form-group">
 							<label for="username">Username</label>
 							<input class="form-control" type="text" name="username" placeholder="Username">
@@ -38,7 +37,6 @@
 					<h5 class="text-center">Sign up for an account</h5>
 					<form class="login-form" method="post" action="/signup/">
 						{% csrf_token %}
-						<input type="hidden" name="next" value="{{ next }}">
 						<div class="form-group">
 							<label for="username">Username</label>
 							{{ form.username }}

@@ -7,8 +7,9 @@ from django.contrib.auth.decorators import login_required
 from .forms import MainForm, CreateUserForm
 from .models import Profiles
 
+@csrf_exempt
 def account(request):
-	return render(request, 'overallsystem/account.html', {'form': MainForm()})
+	return render(request, 'overallsystem/account.html')
 
 def signup(request):
 	if request.method == 'POST':
@@ -27,11 +28,11 @@ def signup(request):
 # 	# kmc.map_to_mood()
 # 	return render(request, 'overallsystem/login.html')
 
-@login_required
+@login_required(redirect_field_name=None)
 def main(request):
 	songs = [track for track in read_file()]
 	if request.path == '/main/' or request.path == '/':
-		return render(request, 'overallsystem/main.html', {'form': MainForm(), 'songs': songs})
+		return render(request, 'overallsystem/main.html', {'form': MainForm(), 'songs': songs, 'profiles': Profiles.objects.get(user=request.user)})
 	else:
 		return HttpResponseNotFound('<h1>Page not found</h1>')
 
