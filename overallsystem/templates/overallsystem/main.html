@@ -1,11 +1,10 @@
 {% extends 'overallsystem/layout.html' %}
 {% block sidebar %}
-
 <!-- Sidebar -->
 <div id="sidebar-wrapper">
 	<ul class="sidebar-nav">
 		<li class="sidebar-brand">
-			<a href="">Music<span>Dudes</span></a>
+			<a href="/">Music<span>Dudes</span></a>
 		</li>
 		<li class="active">
 			<a href="#browse"><i class="fas fa-home"></i>Browse</a>
@@ -32,10 +31,10 @@
 		</div>
 	</div>
 	<div class="btn-group">
-		<button class="btn dropdown-toggle fal fa-user-circle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">username</button>
+		<button class="btn dropdown-toggle fal fa-user-circle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ user.username }}</button>
 		<div class="dropdown-menu dropdown-menu-right">
-			<button class="dropdown-item" type="button">Account</button>
-			<button class="dropdown-item" type="button">Log Out</button>
+			<a class="dropdown-item" href="/account/">Account</a>
+			<a class="dropdown-item" href="/logout/">Log Out</a>
 		</div>
 	</div>
 </div>
@@ -69,6 +68,7 @@
 			<div class="button-add">
 				<button class="fal fa-plus" title="Add to Playlist"></button>
 				<button class="fal fa-heart" title="Add to Favorites"></button>
+				<button class="fas fa-heart sr-only" title="Add to Favorites"></button>
 			</div>
 		</div>
 	</div>
@@ -77,8 +77,10 @@
 			<button class="fal fa-random" title="Enable shuffle"></button>
 			<button class="fal fa-step-backward" title="Previous"></button>
 			<button class="fas fa-play" title="Play"></button>
+			<button class="fas fa-pause sr-only" title="Pause"></button>
 			<button class="fal fa-step-forward" title="Next"></button>
 			<button class="fal fa-repeat-alt" title="Enable repeat"></button>
+			<button class="fal fa-repeat-1-alt sr-only" title="Disable repeat"></button>
 		</div>
 		<div class="playback-bar">
 			<div class="playback-bar-progress-time">0:18</div>
@@ -102,6 +104,7 @@
 </div>
 <!-- Main View -->
 <div class="main-view">
+	{% block songs %}
 	<div class="all-songs">
 		<div class="all-songs-title">
 			<h5>All Songs</h5>
@@ -112,8 +115,9 @@
 				<h6>Ratings</h6>
 			</div>
 			{% for track in songs %}
-			<div class="song">
-				<button class="fas fa-play" id="{{ track.id }}"></button>
+			<div class="song" id="{{ track.id }}">
+				<button class="fas fa-play"></button>
+				<button class="fas fa-pause sr-only"></button>
 				<div class="song-info">
 					<div class="song-info-name">{{ track.track_name }}</div>
 					<div class="song-info-artists">{{ track.artists }}</div>
@@ -121,6 +125,7 @@
 				<div class="song-duration">0:00</div>
 				<div class="button-add">
 					<button class="fal fa-heart" title="Add to Favorites"></button>
+					<button class="fas fa-heart sr-only" title="Add to Favorites"></button>
 					<button class="fal fa-plus" title="Add to Playlist"></button>
 				</div>
 				<div class="listens-ratings">
@@ -139,5 +144,6 @@
 			{% include 'overallsystem/recommendations.html' %}
 		</div>
 	</div>
+	{% endblock %}
 </div>
 {% endblock %}

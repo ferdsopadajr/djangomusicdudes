@@ -1,22 +1,37 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
 from overallsystem.modules.kmeans import cluster_points, read_file
-from .forms import MainForm as mf
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from .forms import MainForm, CreateUserForm
+from .models import Profiles
 
-# Create your views here.
-def login(request):
-	# kmc.map_to_mood()
-	return render(request, 'overallsystem/login.html')
+def account(request):
+	return render(request, 'overallsystem/account.html', {'form': MainForm()})
 
+def signup(request):
+	if request.method == 'POST':
+		form = CreateUserForm(request.POST)
+		if form.is_valid():
+			user = form.save()
+			profile = Profiles(user=user.username)
+			profile.save()
+			messages.success(request, 'Account created successfully!')
+			return redirect('/login/')
+	else:
+		form = CreateUserForm()
+	return render(request, 'overallsystem/login.html', {'form': form})
+
+# def login(request):
+# 	# kmc.map_to_mood()
+# 	return render(request, 'overallsystem/login.html')
+
+@login_required
 def main(request):
 	songs = [track for track in read_file()]
-	rec_songs = []
-	if request.path == '/main/':
-		# if 'track_id' in request.GET:
-			# rec_songs = cluster_points(request.GET['track_id'])
-		rec_songs = cluster_points('2wYHz0GOHV49Xezd5mWTDP')
-		return render(request, 'overallsystem/main.html', {'form': mf(), 'songs': songs, 'rec_songs': rec_songs})
+	if request.path == '/main/' or request.path == '/':
+		return render(request, 'overallsystem/main.html', {'form': MainForm(), 'songs': songs})
 	else:
 		return HttpResponseNotFound('<h1>Page not found</h1>')
 

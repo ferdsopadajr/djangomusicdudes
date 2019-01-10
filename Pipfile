@@ -10,6 +10,9 @@ django = "*"
 statistics = "*"
 numpy = "*"
 matplotlib = "*"
+channels = "*"
+pypiwin32 = "*"
+psycopg2 = "*"
 
 [requires]
 python_version = "3.7"

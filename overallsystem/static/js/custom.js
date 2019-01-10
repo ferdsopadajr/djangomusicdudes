@@ -4,8 +4,7 @@ $(function() {
 		$(this).find('i').css('color','#2b5b84');
 	})
 
-	$('.song button').click(function() {
-		console.log($(this).attr('id'));
+	$('.song').click(function() {
 		$.post(
 			'/gen_rec/',
 			{

@@ -1,7 +1,8 @@
 <div class="song-bdr-top"></div>
 {% for track in rec_songs %}
-<div class="song">
-	<button class="fas fa-play" id="{{ track.id }}"></button>
+<div class="song" id="{{ track.id }}">
+	<button class="fas fa-play"></button>
+	<button class="fas fa-pause sr-only"></button>
 	<div class="song-info">
 		<div class="song-info-name">{{ track.track_name }}</div>
 		<div class="song-info-artists">{{ track.artists }}</div>
