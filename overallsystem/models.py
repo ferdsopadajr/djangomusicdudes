@@ -7,6 +7,7 @@ class Profiles(models.Model):
 	pref_mean_y = models.FloatField(null=True)
 
 class Tracks(models.Model):
+	track_id = models.CharField(max_length=50, primary_key=True)
 	listens = models.IntegerField(default=0)
 	ratings = models.FloatField(default=0)
 
