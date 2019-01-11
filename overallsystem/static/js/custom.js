@@ -1,10 +1,10 @@
 $(function() {
-	$('.sidebar-nav li:not(:first-child) a').click(function() {
+	$('.sidebar-nav li:not(:first-child)').on('click', 'a', function() {
 		$(this).parent().addClass('active').siblings().removeClass('active').find('i').css('color','');
 		$(this).find('i').css('color','#2b5b84');
-	})
+	});
 
-	$('.song').click(function() {
+	$('.main-view').on('click', '.song', function() {
 		$.post(
 			'/gen_rec/',
 			{
@@ -14,14 +14,14 @@ $(function() {
 				$('.rec-container').html(data);
 			}
 		);
-	})
+	});
 
-	$('#account').click(function() {
+	$('.top-bar').on('click', '#account', function() {
 		$.get(
 			'/account/',
 			function(data) {
 				$('.main-view').html(data);
 			}
 		)
-	})
+	});
 });

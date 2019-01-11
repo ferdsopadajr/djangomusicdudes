@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from overallsystem.modules.kmeans import cluster_points, read_file
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from datetime import timedelta, datetime
 from .forms import MainForm, CreateUserForm
 from .models import Profiles
 
@@ -31,6 +32,8 @@ def signup(request):
 @login_required(redirect_field_name=None)
 def main(request):
 	songs = [track for track in read_file()]
+	for track in songs:
+		track['duration_ms'] = datetime.fromtimestamp(int(track['duration_ms'])/1000).strftime('%#M:%S')
 	if request.path == '/main/' or request.path == '/':
 		return render(request, 'overallsystem/main.html', {'form': MainForm(), 'songs': songs, 'profiles': Profiles.objects.get(user=request.user)})
 	else:
@@ -39,4 +42,6 @@ def main(request):
 @csrf_exempt
 def gen_rec(request):
 	rec_songs = cluster_points(request.POST['track_id'])
+	for track in rec_songs:
+		track['duration_ms'] = datetime.fromtimestamp(int(track['duration_ms'])/1000).strftime('%#M:%S')
 	return render(request, 'overallsystem/recommendations.html', {'rec_songs': rec_songs})
