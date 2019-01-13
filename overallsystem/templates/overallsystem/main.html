@@ -41,36 +41,9 @@
 <!-- Controls Bar -->
 <div class="controls-bar">
 	<div class="controls-bar-left">
-		<div class="now-playing">
-			<span draggable="true">
-				<a href="#now-playing">
-					<div class="cover-shadow">
-						<div class="cover-img"></div>
-					</div>
-				</a>
-			</span>
-			<div class="track-info">
-				<div class="track-info-name">
-					<div class="context-wrapper">
-						<span>
-							<a href="#now-playing-name">Track Name</a>
-						</span>
-					</div>
-				</div>
-				<div class="track-info-artists">
-					<div class="context-wrapper">
-						<span>
-							<a href="#now-playing-artists">Artists</a>
-						</span>
-					</div>
-				</div>
-			</div>
-			<div class="button-add">
-				<button class="fal fa-plus" title="Add to Playlist"></button>
-				<button class="fal fa-heart" title="Add to Favorites"></button>
-				<button class="fas fa-heart sr-only" title="Add to Favorites"></button>
-			</div>
-		</div>
+		<!-- if profile.pref_mean_x -->
+		{% include 'overallsystem/now-playing.html' %}
+		<!-- endif -->
 	</div>
 	<div class="controls-bar-center">
 		<div class="player-controls-buttons">
@@ -105,7 +78,11 @@
 <!-- Main View -->
 <div class="main-view">
 	{% block songs %}
-	<div class="all-songs">
+	{% if profile.pref_mean_x %}
+		<div class="all-songs">
+	{% else %}
+		<div class="all-songs full">
+	{% endif %}
 		<div class="all-songs-title">
 			<h5>All Songs</h5>
 		</div>
@@ -116,7 +93,7 @@
 			</div>
 			{% for track in songs %}
 			<div class="song" id="{{ track.id }}">
-				<button class="fas fa-play"></button>
+				<button class="fas fa-play" title="Play"></button>
 				<button class="fas fa-pause sr-only"></button>
 				<div class="song-info">
 					<div class="song-info-name">{{ track.track_name }}</div>
@@ -130,20 +107,40 @@
 				</div>
 				<div class="listens-ratings">
 					<div class="listens">00001</div>
+					<!-- ratings formula
+						ratings = (sum(listenduration)+fvpl) / ((sum(listens)*maxdurationeach)+fvpl)
+					 -->
 					<div class="ratings">100%</div>
 				</div>
 			</div>
 			{% endfor %}
 		</div>
 	</div>
-	<div class="rec">
-		<div class="rec-title">
-			<h5>Suggested Songs</h5>
+	{% if profile.pref_mean_x %}
+		<div class="mood-rec">
+			<div class="current-mood">
+				<div class="mood-sec">
+					<h6 class="mood">Current Mood:</h6>
+					<div class="heatmap-cont">
+						<div class="mood-heatmap"></div>
+						<div class="heatpoint" title="Sad"><!-- append value to margin-left attribute coming from cfd-rate; change its title --></div>
+					</div>
+				</div>
+				<div class="cfd-sec">
+					<h6 class="cfd-rate">Confidence Rate:</h6>
+					<div class="cfd-pct">%<!-- add percentage computation here --></div>
+				</div>
+			</div>
+			<div class="rec">
+				<div class="rec-title">
+					<h5>Suggested Songs</h5>
+				</div>
+				<div class="rec-container">
+					{% include 'overallsystem/recommendations.html' %}
+				</div>
+			</div>
 		</div>
-		<div class="rec-container">
-			{% include 'overallsystem/recommendations.html' %}
-		</div>
-	</div>
+	{% endif %}
 	{% endblock %}
 </div>
 {% endblock %}

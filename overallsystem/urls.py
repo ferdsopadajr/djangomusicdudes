@@ -10,4 +10,6 @@ urlpatterns = [
   path('', views.main),
   path('main/', views.main),
   path('gen_rec/', views.gen_rec),
+  path('upd_cbl/', views.upd_cbl),
+  path('add_to_fav/', views.add_to_fav),
 ]

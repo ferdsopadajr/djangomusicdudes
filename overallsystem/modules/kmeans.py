@@ -15,7 +15,7 @@ def read_file(track_id = None):
 		if not track_id:
 			return [dict(row) for row in reader]
 		else:
-			return [dict(row) for row in reader if dict(row)['id'] == track_id]
+			return [dict(row) for row in reader if dict(row)['id'] == track_id][0]
 	file.close()
 
 def determine_mood(row):
@@ -63,7 +63,7 @@ def calc_dist(tracks, query):
 	distance = {key:[] for key in query if key not in ['track_name', 'artists', 'id', 'genre', 'duration_ms', 'mode']}
 
 	for track_id in tracks:
-		feats = read_file(track_id)[0]
+		feats = read_file(track_id)
 		for i in feats:
 			if i not in ['track_name', 'artists', 'id', 'genre', 'duration_ms', 'mode']:
 				distance[i].append([track_id, np.linalg.norm(float(query[i]) - float(feats[i]))])
@@ -170,7 +170,7 @@ def cluster_points(track_id):
 	'''
 
 	# Get mood quadrant to start clustering
-	quadrant = determine_mood(read_file(track_id)[0])
+	quadrant = determine_mood(read_file(track_id))
 
 	# Elbow method to determine clusters count
 	# sse = elbow_method(quadrant)
@@ -225,4 +225,4 @@ def cluster_points(track_id):
 		item[1] = round(mean(x for x in item[1]), 3)
 
 	# Return sorted recommendations
-	return [read_file(track_id)[0] for track_id in [item[0] for item in sorted(sorted_rec, key = lambda item : item[1])]]
+	return [read_file(track_id) for track_id in [item[0] for item in sorted(sorted_rec, key = lambda item : item[1])]]

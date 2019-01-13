@@ -1,0 +1,30 @@
+<div class="now-playing">
+	<span draggable="true">
+		<a href="#now-playing">
+			<div class="cover-shadow">
+				<div class="cover-img"></div>
+			</div>
+		</a>
+	</span>
+	<div class="track-info">
+		<div class="track-info-name">
+			<div class="context-wrapper">
+				<span>
+					<a href="#now-playing-name" title="{{ track.track_name }}">{{ track.track_name }}</a>
+				</span>
+			</div>
+		</div>
+		<div class="track-info-artists">
+			<div class="context-wrapper">
+				<span>
+					<a href="#now-playing-artists" title="{{ track.artists }}">{{ track.artists }}</a>
+				</span>
+			</div>
+		</div>
+	</div>
+	<div class="button-add">
+		<button class="fal fa-plus" title="Add to Playlist"></button>
+		<button class="fal fa-heart" title="Add to Favorites"></button>
+		<button class="fas fa-heart sr-only" title="Add to Favorites"></button>
+	</div>
+</div>
