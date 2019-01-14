@@ -59,8 +59,11 @@ def plot_points():
 	plt.legend(loc = 4)
 	plt.show()
 
-def calc_dist(tracks, query):
+def calc_dist(tracks, query, **kwargs):
 	distance = {key:[] for key in query if key not in ['track_name', 'artists', 'id', 'genre', 'duration_ms', 'mode']}
+	if 'valence' and 'energy' in kwargs:
+		query['valence'] = kwargs['valence']
+		query['energy'] = kwargs['energy']
 
 	for track_id in tracks:
 		feats = read_file(track_id)
@@ -159,7 +162,7 @@ def elbow_method(quadrant):
 	plt.title('Elbow Method For Optimal K')
 	plt.show()
 
-def cluster_points(track_id):
+def cluster_points(track_id, pref_mean_x, pref_mean_y):
 	''' Pseudocode for this method
 			while songs_to_recommend != quota:
 				regenerate random points for centroids
@@ -199,7 +202,11 @@ def cluster_points(track_id):
 	print('Elapsed time:', timedelta(seconds = time.time() - start))
 
 	# Recommendations ranking
-	distance = calc_dist(songs_to_recommend, quadrant['feat'])
+	if pref_mean_x and pref_mean_y:
+		print(pref_mean_x, pref_mean_y)
+		distance = calc_dist(songs_to_recommend, quadrant['feat'], valence=pref_mean_x, energy=pref_mean_y)
+	else:
+		distance = calc_dist(songs_to_recommend, quadrant['feat'])
 	rank = {k:{} for k in distance}
 
 	# Get indices of each recommended track in minimum ranking of each audio feature

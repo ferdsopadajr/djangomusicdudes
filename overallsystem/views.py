@@ -41,7 +41,9 @@ def main(request):
 
 @csrf_exempt
 def gen_rec(request):
-	rec_songs = cluster_points(request.POST['track_id'])
+	profile = Profiles.objects.get(user=request.user)
+	print(profile.pref_mean_x, profile.pref_mean_y)
+	rec_songs = cluster_points(request.POST['track_id'], profile.pref_mean_x, profile.pref_mean_y)
 	for rec in rec_songs:
 		rec['duration_ms'] = datetime.fromtimestamp(int(rec['duration_ms'])/1000).strftime('%#M:%S')
 	return render(request, 'overallsystem/recommendations.html', {'rec_songs': rec_songs, 'profile': Profiles.objects.get(user=request.user)})
