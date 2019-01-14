@@ -203,7 +203,6 @@ def cluster_points(track_id, pref_mean_x, pref_mean_y):
 
 	# Recommendations ranking
 	if pref_mean_x and pref_mean_y:
-		print(pref_mean_x, pref_mean_y)
 		distance = calc_dist(songs_to_recommend, quadrant['feat'], valence=pref_mean_x, energy=pref_mean_y)
 	else:
 		distance = calc_dist(songs_to_recommend, quadrant['feat'])

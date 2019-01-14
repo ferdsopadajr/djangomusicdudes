@@ -6,6 +6,8 @@ $(function() {
 		$(this).find('i').css('color','#2b5b84');
 	});
 
+	$.ajaxSetup({async: false});
+
 	// display recommendations
 	$('.main-view').on('click', '.fa-play', function() {
 		track_id = $(this).parent().attr('id');
@@ -92,8 +94,10 @@ $(function() {
 	// player controls
 	$('.player-controls-buttons').on('click', '.fa-pause', function() {
 		$(this).addClass('sr-only').siblings('.fa-play').removeClass('sr-only');
+		$('.main-view').find('div#'+track_id).find('.fa-pause').addClass('sr-only').siblings('.fa-play').removeClass('sr-only');
 	}).on('click', '.fa-play', function() {
 		$(this).addClass('sr-only').siblings('.fa-pause').removeClass('sr-only');
+		$('.main-view').find('div#'+track_id).find('.fa-play').addClass('sr-only').siblings('.fa-pause').removeClass('sr-only');
 	}).on('click', '.fa-random, .fa-repeat-alt', function() {
 		if ($(this).hasClass('but-clkd')) {
 			$(this).removeClass('but-clkd');
