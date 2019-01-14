@@ -36,11 +36,6 @@ $controls: #402f4c;
 		color: $primary;
 	}
 }
-@mixin right-panel($bg, $pb) {
-	overflow: auto;
-	background: $bg;
-	padding-bottom: $pb;
-}
 %songs-header {
 	display: flex;
 	align-items: center;
@@ -50,7 +45,7 @@ $controls: #402f4c;
 }
 %container {
 	width: 100%;
-	padding: 0 25px;
+	padding: 0 25px 15px 25px;
 }
 %align {
 	display: flex;
@@ -76,8 +71,16 @@ $controls: #402f4c;
 	transition: 0s;
 }
 
-html {
-	overflow: hidden;
+@media (max-width: 1365px) {
+	html {
+		overflow-x: scroll;
+		overflow-y: hidden;
+	}
+}
+@media (min-width: 1366px) {
+	html {
+		overflow: hidden;
+	}
 }
 body {
 	background: $sidebar-bg;
@@ -241,6 +244,9 @@ a {
   			margin-left: .5em;
   		}
   	}
+  	#account:active {
+			background: $secondary;
+		}
   	&:focus {
   		outline: none;
   	}
@@ -436,14 +442,14 @@ a {
 	}
 	.all-songs {
 		background: linear-gradient(#49384a, #947696, #49384a);
-		overflow-y: scroll;
 		width: 65%;
 		min-width: 748.14px;
-		padding-bottom: 15px;
 		.all-songs-title {
 			@extend %songs-header;
 		}
 		.songs-container {
+			height: 504.61px;
+			overflow: auto;
 			@extend %container;
 			.song-bdr-top {
 				@extend %bdr-top;
@@ -525,7 +531,7 @@ a {
 		width: 35%;
 		min-width: 402.84px;
 		.current-mood {
-			@include right-panel(#614e62, 0);
+			background: #614e62;
 			display: flex;
 			padding-left: 15px;
 			.mood-sec {
@@ -572,12 +578,14 @@ a {
 			}
 		}
 		.rec {
-			@include right-panel(linear-gradient(#614e62, #958196), 15px);
-			height: 93.5%;
+			background: linear-gradient(#614e62, #958196);
+			height: 92.6%;
 			.rec-title {
 				@extend %songs-header;
 			}
 			.rec-container {
+				height: 463.56px;
+				overflow: auto;
 				@extend %container;
 				.song-bdr-top {
 					@extend %bdr-top;

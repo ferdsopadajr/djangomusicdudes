@@ -8,7 +8,7 @@
 
 .main-view .all-songs .songs-container, .main-view .mood-rec .rec .rec-container {
   width: 100%;
-  padding: 0 25px;
+  padding: 0 25px 15px 25px;
 }
 
 #sidebar-wrapper .cr_pl a, .sidebar-nav li:not(:first-child) a {
@@ -37,10 +37,17 @@
   transition: 0s;
 }
 
-html {
-  overflow: hidden;
+@media (max-width: 1365px) {
+  html {
+    overflow-x: scroll;
+    overflow-y: hidden;
+  }
 }
-
+@media (min-width: 1366px) {
+  html {
+    overflow: hidden;
+  }
+}
 body {
   background: #36273c;
   color: #cac0c9;
@@ -215,6 +222,9 @@ a:hover {
   width: auto;
   margin-top: .25em;
   margin-left: .5em;
+}
+.top-bar .btn-group #account:active {
+  background: #cac0c9;
 }
 .top-bar .btn-group:focus {
   outline: none;
@@ -444,10 +454,12 @@ a:hover {
 }
 .main-view .all-songs {
   background: linear-gradient(#49384a, #947696, #49384a);
-  overflow-y: scroll;
   width: 65%;
   min-width: 748.14px;
-  padding-bottom: 15px;
+}
+.main-view .all-songs .songs-container {
+  height: 504.61px;
+  overflow: auto;
 }
 .main-view .all-songs .songs-container .song-bdr-top {
   display: flex;
@@ -525,9 +537,7 @@ a:hover {
   min-width: 402.84px;
 }
 .main-view .mood-rec .current-mood {
-  overflow: auto;
   background: #614e62;
-  padding-bottom: 0;
   display: flex;
   padding-left: 15px;
 }
@@ -574,10 +584,12 @@ a:hover {
   margin: 10px 0;
 }
 .main-view .mood-rec .rec {
-  overflow: auto;
   background: linear-gradient(#614e62, #958196);
-  padding-bottom: 15px;
-  height: 93.5%;
+  height: 92.6%;
+}
+.main-view .mood-rec .rec .rec-container {
+  height: 463.56px;
+  overflow: auto;
 }
 .main-view .mood-rec .rec .rec-container .song {
   display: flex;

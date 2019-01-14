@@ -12,4 +12,5 @@ urlpatterns = [
   path('gen_rec/', views.gen_rec),
   path('upd_cbl/', views.upd_cbl),
   path('add_to_fav/', views.add_to_fav),
+  path('del_to_fav/', views.del_to_fav),
 ]

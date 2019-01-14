@@ -7,7 +7,7 @@ class Profiles(models.Model):
 	pref_mean_y = models.FloatField(null=True)
 
 class Tracks(models.Model):
-	track_id = models.CharField(max_length=50, primary_key=True)
+	track = models.CharField(max_length=50, primary_key=True)
 	listens = models.IntegerField(default=0)
 	ratings = models.FloatField(default=0)
 
@@ -17,7 +17,9 @@ class Playlists(models.Model):
 
 class UserFaves(models.Model):
 	user = models.ForeignKey(Profiles, on_delete=models.CASCADE)
-	track = models.CharField(max_length=50)
+	track = models.ForeignKey(Tracks, on_delete=models.CASCADE)
+	class Meta:
+		unique_together = ('user', 'track')
 
 class PlaylistTracks(models.Model):
 	playlist = models.ForeignKey(Playlists, on_delete=models.CASCADE)

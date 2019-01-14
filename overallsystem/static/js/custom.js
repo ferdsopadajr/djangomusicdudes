@@ -10,32 +10,35 @@ $(function() {
 	$('.main-view').on('click', '.fa-play', function() {
 		track_id = $(this).parent().attr('id');
 		$('.all-songs').removeClass('full');
-		$(this).addClass('sr-only').siblings('.fa-pause').removeClass('sr-only');
-		$.post(
-			'/gen_rec/',
-			{
-				track_id: track_id
-			},
-			function(data) {
-				$('.rec-container').html(data);
-			}
-		);
+		$(this).addClass('sr-only').siblings('.fa-pause').removeClass('sr-only').parent().siblings('.song').find('.fa-pause').addClass('sr-only').siblings('.fa-play').removeClass('sr-only');
+		$('.player-controls-buttons .fa-play').addClass('sr-only').siblings('.fa-pause').removeClass('sr-only');
 		$.post(
 			'/upd_cbl/',
 			{
 				track_id: track_id
 			},
 			function(data) {
+				console.log($('.song-info-name').val());
 				$('.controls-bar-left').html(data);
+				$('.controls-bar').attr('id',track_id);
+			}
+		);
+		$.post(
+			'/gen_rec/',
+			{
+				track_id: track_id
+			},
+			function(data) {
+				$('.mood-rec').removeClass('sr-only').html(data);
 			}
 		);
 	}).on('click', '.fa-pause', function() {
 		$(this).addClass('sr-only').siblings('.fa-play').removeClass('sr-only');
+		$('.player-controls-buttons .fa-pause').addClass('sr-only').siblings('.fa-play').removeClass('sr-only');
 	});
 
-	$('.main-view, .controls-bar-left').on('click', '.fal.fa-heart', function() {
+	$('.main-view').on('click', '.fal.fa-heart', function() {
 		track_id = $(this).parents('.song').attr('id');
-		console.log(track_id);
 		// add song to favorites
 		$.post(
 			'/add_to_fav/',
@@ -44,8 +47,46 @@ $(function() {
 			}
 		);
 		$(this).addClass('sr-only').siblings('.fas.fa-heart').removeClass('sr-only');
+		if ($('.controls-bar').attr('id') == track_id) {
+			$('.controls-bar-left .fal.fa-heart').addClass('sr-only').siblings('.fas.fa-heart').removeClass('sr-only');
+		}
 	}).on('click', '.fas.fa-heart', function() {
+		track_id = $(this).parents('.song').attr('id');
+		// remove song to favorites
+		$.post(
+			'/del_to_fav/',
+			{
+				track_id: track_id
+			}
+		);
 		$(this).addClass('sr-only').siblings('.fal.fa-heart').removeClass('sr-only');
+		if ($('.controls-bar').attr('id') == track_id) {
+			$('.controls-bar-left .fas.fa-heart').addClass('sr-only').siblings('.fal.fa-heart').removeClass('sr-only');
+		}
+	});
+
+	$('.controls-bar-left').on('click', '.fal.fa-heart', function() {
+		track_id = $(this).parents('.controls-bar').attr('id');
+		// add song to favorites
+		$.post(
+			'/add_to_fav/',
+			{
+				track_id: track_id
+			}
+		);
+		$(this).addClass('sr-only').siblings('.fas.fa-heart').removeClass('sr-only');
+		$('.main-view').find('div#'+track_id).find('.fal.fa-heart').addClass('sr-only').siblings('.fas.fa-heart').removeClass('sr-only');
+	}).on('click', '.fas.fa-heart', function() {
+		track_id = $(this).parents('.controls-bar').attr('id');
+		// remove song to favorites
+		$.post(
+			'/del_to_fav/',
+			{
+				track_id: track_id
+			}
+		);
+		$(this).addClass('sr-only').siblings('.fal.fa-heart').removeClass('sr-only');
+		$('.main-view').find('div#'+track_id).find('.fas.fa-heart').addClass('sr-only').siblings('.fal.fa-heart').removeClass('sr-only');
 	});
 
 	// player controls

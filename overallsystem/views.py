@@ -35,7 +35,7 @@ def main(request):
 	for track in songs:
 		track['duration_ms'] = datetime.fromtimestamp(int(track['duration_ms'])/1000).strftime('%#M:%S')
 	if request.path == '/main/' or request.path == '/':
-		return render(request, 'overallsystem/main.html', {'form': MainForm(), 'songs': songs, 'profile': Profiles.objects.get(user=request.user)})
+		return render(request, 'overallsystem/main.html', {'form': MainForm(), 'songs': songs, 'profile': Profiles.objects.get(user=request.user), 'fave': Profiles.objects.get(user=request.user).userfaves_set.all()})
 	else:
 		return HttpResponseNotFound('<h1>Page not found</h1>')
 
@@ -44,17 +44,22 @@ def gen_rec(request):
 	rec_songs = cluster_points(request.POST['track_id'])
 	for rec in rec_songs:
 		rec['duration_ms'] = datetime.fromtimestamp(int(rec['duration_ms'])/1000).strftime('%#M:%S')
-	return render(request, 'overallsystem/recommendations.html', {'rec_songs': rec_songs})
+	return render(request, 'overallsystem/recommendations.html', {'rec_songs': rec_songs, 'profile': Profiles.objects.get(user=request.user)})
 
 @csrf_exempt
 def upd_cbl(request):
 	track = read_file(request.POST['track_id'])
 	profile = Profiles(user=request.user, pref_mean_x=track['valence'], pref_mean_y=track['energy'])
 	profile.save()
-	return render(request, 'overallsystem/now-playing.html', {'track': track})
+	return render(request, 'overallsystem/now-playing.html', {'track': track, 'fave': Profiles.objects.get(user=request.user).userfaves_set.all()})
 
 @csrf_exempt
 def add_to_fav(request):
-	fave = UserFaves(user=Profiles.objects.get(user=request.user), track=request.POST['track_id'])
+	fave = UserFaves(user=Profiles.objects.get(user=request.user), track=Tracks.objects.get(track=request.POST['track_id']))
 	fave.save()
+	return HttpResponse()
+
+@csrf_exempt
+def del_to_fav(request):
+	UserFaves.objects.filter(user=Profiles.objects.get(user=request.user), track=Tracks.objects.get(track=request.POST['track_id'])).delete()
 	return HttpResponse()

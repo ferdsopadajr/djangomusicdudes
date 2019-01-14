@@ -41,9 +41,9 @@
 <!-- Controls Bar -->
 <div class="controls-bar">
 	<div class="controls-bar-left">
-		<!-- if profile.pref_mean_x -->
-		{% include 'overallsystem/now-playing.html' %}
-		<!-- endif -->
+		{% if profile.pref_mean_x %}
+			{% include 'overallsystem/now-playing.html' %}
+		{% endif %}
 	</div>
 	<div class="controls-bar-center">
 		<div class="player-controls-buttons">
@@ -101,8 +101,18 @@
 				</div>
 				<div class="song-duration">{{ track.duration_ms }}</div>
 				<div class="button-add">
-					<button class="fal fa-heart" title="Add to Favorites"></button>
-					<button class="fas fa-heart sr-only" title="Add to Favorites"></button>
+					{% for song in fave %}
+						{% if track.id == song.track.track %}
+							<button class="fal fa-heart sr-only" title="Add to Favorites"></button>
+							<button class="fas fa-heart" title="Add to Favorites"></button>
+						{% else %}
+							<button class="fal fa-heart" title="Add to Favorites"></button>
+							<button class="fas fa-heart sr-only" title="Add to Favorites"></button>
+						{% endif %}
+					{% empty %}
+						<button class="fal fa-heart" title="Add to Favorites"></button>
+						<button class="fas fa-heart sr-only" title="Add to Favorites"></button>
+					{% endfor %}
 					<button class="fal fa-plus" title="Add to Playlist"></button>
 				</div>
 				<div class="listens-ratings">
@@ -116,31 +126,9 @@
 			{% endfor %}
 		</div>
 	</div>
-	{% if profile.pref_mean_x %}
-		<div class="mood-rec">
-			<div class="current-mood">
-				<div class="mood-sec">
-					<h6 class="mood">Current Mood:</h6>
-					<div class="heatmap-cont">
-						<div class="mood-heatmap"></div>
-						<div class="heatpoint" title="Sad"><!-- append value to margin-left attribute coming from cfd-rate; change its title --></div>
-					</div>
-				</div>
-				<div class="cfd-sec">
-					<h6 class="cfd-rate">Confidence Rate:</h6>
-					<div class="cfd-pct">%<!-- add percentage computation here --></div>
-				</div>
-			</div>
-			<div class="rec">
-				<div class="rec-title">
-					<h5>Suggested Songs</h5>
-				</div>
-				<div class="rec-container">
-					{% include 'overallsystem/recommendations.html' %}
-				</div>
-			</div>
-		</div>
-	{% endif %}
+	<div class="mood-rec sr-only">
+		{% include 'overallsystem/recommendations.html' %}
+	</div>
 	{% endblock %}
 </div>
 {% endblock %}
