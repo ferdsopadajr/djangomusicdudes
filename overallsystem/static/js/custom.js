@@ -4,6 +4,16 @@ $(function() {
 	$('.sidebar-nav li:not(:first-child)').on('click', 'a', function() {
 		$(this).parent().addClass('active').siblings().removeClass('active').find('i').css('color','');
 		$(this).find('i').css('color','#2b5b84');
+
+		if ($(this).attr('id') == '#favorites') {
+			// display favorites
+			$.post(
+				'/favorites/',
+				function(data) {
+					$('.all-songs').html(data);
+				}
+			);
+		}
 	});
 
 	$.ajaxSetup({async: false});
@@ -11,13 +21,19 @@ $(function() {
 	// display recommendations
 	$('.main-view').on('click', '.fa-play', function() {
 		track_id = $(this).parent().attr('id');
+		past_track = null;
+		if ($('.controls-bar').attr('id')) {
+			past_track = $('.controls-bar').attr('id');
+		}
+		console.log(past_track);
 		$('.all-songs').removeClass('full');
 		$(this).addClass('sr-only').siblings('.fa-pause').removeClass('sr-only').parent().siblings('.song').find('.fa-pause').addClass('sr-only').siblings('.fa-play').removeClass('sr-only');
 		$('.player-controls-buttons .fa-play').addClass('sr-only').siblings('.fa-pause').removeClass('sr-only');
 		$.post(
 			'/upd_cbl/',
 			{
-				track_id: track_id
+				track_id: track_id,
+				past_track: past_track,
 			},
 			function(data) {
 				console.log($('.song-info-name').val());
@@ -121,11 +137,11 @@ $(function() {
 
 	// display account settings
 	$('.top-bar').on('click', '#account', function() {
-		$.get(
+		$.post(
 			'/account/',
 			function(data) {
 				$('.main-view').html(data);
 			}
-		)
+		);
 	});
 });

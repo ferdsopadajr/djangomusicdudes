@@ -24,17 +24,12 @@
 	</div>
 	<div class="button-add">
 		<button class="fal fa-plus" title="Add to Playlist"></button>
-		{% for song in fave %}
-			{% if track.id == song.track.track %}
-				<button class="fal fa-heart sr-only" title="Add to Favorites"></button>
-				<button class="fas fa-heart" title="Add to Favorites"></button>
-			{% else %}
-				<button class="fal fa-heart" title="Add to Favorites"></button>
-				<button class="fas fa-heart sr-only" title="Add to Favorites"></button>
-			{% endif %}
-		{% empty %}
+		{% if track.id in fave %}
+			<button class="fal fa-heart sr-only" title="Add to Favorites"></button>
+			<button class="fas fa-heart" title="Add to Favorites"></button>
+		{% else %}
 			<button class="fal fa-heart" title="Add to Favorites"></button>
 			<button class="fas fa-heart sr-only" title="Add to Favorites"></button>
-		{% endfor %}
+		{% endif %}
 	</div>
 </div>

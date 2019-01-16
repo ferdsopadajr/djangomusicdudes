@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
-from overallsystem.modules.kmeans import cluster_points, read_file
+from overallsystem.modules.kmeans import cluster_points, read_file, preference
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from datetime import timedelta, datetime
+from datetime import timedelta
 from .forms import MainForm, CreateUserForm
 from .models import *
 
@@ -32,10 +32,12 @@ def signup(request):
 @login_required(redirect_field_name=None)
 def main(request):
 	songs = [track for track in read_file()]
-	for track in songs:
-		track['duration_ms'] = datetime.fromtimestamp(int(track['duration_ms'])/1000).strftime('%#M:%S')
+	profile = Profiles.objects.get(user=request.user)
+	if profile.pref_mean_energy:
+		rec_songs = cluster_points(query=preference(profile, Profiles._meta.fields))
+		print(rec_songs)	
 	if request.path == '/main/' or request.path == '/':
-		return render(request, 'overallsystem/main.html', {'form': MainForm(), 'songs': songs, 'profile': Profiles.objects.get(user=request.user), 'fave': Profiles.objects.get(user=request.user).userfaves_set.all()})
+		return render(request, 'overallsystem/main.html', {'form': MainForm(), 'songs': songs, 'profile': Profiles.objects.get(user=request.user), 'fave': [obj.track.track for obj in Profiles.objects.get(user=request.user).userfaves_set.all()]})
 	else:
 		return HttpResponseNotFound('<h1>Page not found</h1>')
 
@@ -43,16 +45,17 @@ def main(request):
 def gen_rec(request):
 	profile = Profiles.objects.get(user=request.user)
 	rec_songs = cluster_points(request.POST['track_id'], profile.pref_mean_x, profile.pref_mean_y)
-	for rec in rec_songs:
-		rec['duration_ms'] = datetime.fromtimestamp(int(rec['duration_ms'])/1000).strftime('%#M:%S')
 	return render(request, 'overallsystem/recommendations.html', {'rec_songs': rec_songs, 'profile': Profiles.objects.get(user=request.user)})
 
 @csrf_exempt
 def upd_cbl(request):
 	track = read_file(request.POST['track_id'])
+	if request.POST['past_track']:
+		past_track = read_file(request.POST['past_track'])
+		print(past_track['valence'], past_track['energy'])
 	profile = Profiles(user=request.user, pref_mean_x=track['valence'], pref_mean_y=track['energy'])
 	profile.save()
-	return render(request, 'overallsystem/now-playing.html', {'track': track, 'fave': Profiles.objects.get(user=request.user).userfaves_set.all()})
+	return render(request, 'overallsystem/now-playing.html', {'track': track, 'fave': [obj.track.track for obj in Profiles.objects.get(user=request.user).userfaves_set.all()]})
 
 @csrf_exempt
 def add_to_fav(request):
@@ -64,3 +67,13 @@ def add_to_fav(request):
 def del_to_fav(request):
 	UserFaves.objects.filter(user=Profiles.objects.get(user=request.user), track=Tracks.objects.get(track=request.POST['track_id'])).delete()
 	return HttpResponse()
+
+@csrf_exempt
+def favorites(request):
+	fave = Profiles.objects.get(user=request.user).userfaves_set.all()
+	songs = [obj.track.track for obj in fave]
+	favorites = [read_file(track) for track in songs]
+	for track in favorites:
+		track['duration_ms'] = datetime.fromtimestamp(int(track['duration_ms'])/1000).strftime('%#M:%S')
+	print(favorites)
+	return render(request, 'overallsystem/favorites.html', {'fave': favorites})

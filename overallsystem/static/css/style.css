@@ -224,7 +224,7 @@ a:hover {
   margin-top: .25em;
   margin-left: .5em;
 }
-.top-bar .btn-group #account:active {
+.top-bar .btn-group #account:active, .top-bar .btn-group #logout:active {
   background: #cac0c9;
 }
 .top-bar .btn-group:focus {
@@ -676,4 +676,10 @@ a:hover {
 }
 .login .login-head button:hover {
   background: #2b5b84;
+}
+.login .login-head button:active {
+  color: #36273c !important;
+}
+.login .login-head button:focus {
+  box-shadow: none !important;
 }

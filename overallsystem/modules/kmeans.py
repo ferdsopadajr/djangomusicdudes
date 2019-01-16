@@ -5,6 +5,7 @@ from math import *
 import matplotlib.pyplot as plt
 import numpy as np
 from statistics import mean
+from datetime import datetime
 import time
 
 # K-Means Clustering Module
@@ -13,10 +14,19 @@ def read_file(track_id = None):
 	with open('452Tracks.csv', 'r') as file:
 		reader = csv.DictReader(file)
 		if not track_id:
-			return [dict(row) for row in reader]
+			tracks = [dict(row) for row in reader]
+			for track in tracks:
+				convert_time(track)
+			return tracks
 		else:
-			return [dict(row) for row in reader if dict(row)['id'] == track_id][0]
+			tracks = [dict(row) for row in reader if dict(row)['id'] == track_id][0]
+			for track in tracks:
+				convert_time(track)
+			return tracks
 	file.close()
+
+def convert_time(track):
+	track['duration_ms'] = datetime.fromtimestamp(int(track['duration_ms'])/1000).strftime('%#M:%S')
 
 def determine_mood(row):
 	# Return mood quadrant of track
@@ -61,7 +71,8 @@ def plot_points():
 
 def calc_dist(tracks, query, **kwargs):
 	distance = {key:[] for key in query if key not in ['track_name', 'artists', 'id', 'genre', 'duration_ms', 'mode']}
-	if 'valence' and 'energy' in kwargs:
+	
+	if sorted(['acousticness','danceability','energy','instrumentalness','key','liveness','loudness','speechiness','tempo','valence']) == sorted(list(kwargs.keys())):
 		query['valence'] = kwargs['valence']
 		query['energy'] = kwargs['energy']
 
@@ -162,7 +173,11 @@ def elbow_method(quadrant):
 	plt.title('Elbow Method For Optimal K')
 	plt.show()
 
-def cluster_points(track_id, pref_mean_x, pref_mean_y):
+def preference(profile, fields):
+	return {a.get_attname():getattr(profile, a.get_attname()) for a in fields if a.get_attname() != 'user'}
+
+
+def cluster_points(**kwargs):
 	''' Pseudocode for this method
 			while songs_to_recommend != quota:
 				regenerate random points for centroids
@@ -173,7 +188,10 @@ def cluster_points(track_id, pref_mean_x, pref_mean_y):
 	'''
 
 	# Get mood quadrant to start clustering
-	quadrant = determine_mood(read_file(track_id))
+	if kwargs['preference']:
+		quadrant = kwargs['preference']
+	else:
+		quadrant = determine_mood(read_file(kwargs['track_id']))
 
 	# Elbow method to determine clusters count
 	# sse = elbow_method(quadrant)

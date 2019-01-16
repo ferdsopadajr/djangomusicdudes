@@ -245,7 +245,7 @@ a {
   			margin-left: .5em;
   		}
   	}
-  	#account:active {
+  	#account:active, #logout:active {
 			background: $secondary;
 		}
   	&:focus {
@@ -680,6 +680,12 @@ a {
 			color: $sidebar-bg;
 			&:hover {
 				background: $brand-sec;
+			}
+			&:active {
+				color: $sidebar-bg !important;
+			}
+			&:focus {
+				box-shadow: none !important;
 			}
 		}
 	}

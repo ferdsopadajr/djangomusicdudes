@@ -1,0 +1,32 @@
+<div class="all-songs-title">
+	<h5>Favorites</h5>
+</div>
+<div class="songs-container">
+	<div class="song-bdr-top">
+		<h6>Listens</h6>
+		<h6>Ratings</h6>
+	</div>
+	{% for track in fave %}
+	<div class="song" id="{{ track.id }}">
+		<button class="fas fa-play" title="Play"></button>
+		<button class="fas fa-pause sr-only"></button>
+		<div class="song-info">
+			<div class="song-info-name">{{ track.track_name }}</div>
+			<div class="song-info-artists">{{ track.artists }}</div>
+		</div>
+		<div class="song-duration">{{ track.duration_ms }}</div>
+		<div class="button-add">
+			<button class="fal fa-heart sr-only" title="Add to Favorites"></button>
+			<button class="fas fa-heart" title="Add to Favorites"></button>
+			<button class="fal fa-plus" title="Add to Playlist"></button>
+		</div>
+		<div class="listens-ratings">
+			<div class="listens">00001</div>
+			<!-- ratings formula
+				ratings = (sum(listenduration)+fvpl) / ((sum(listens)*maxdurationeach)+fvpl)
+			 -->
+			<div class="ratings">100%</div>
+		</div>
+	</div>
+	{% endfor %}
+</div>

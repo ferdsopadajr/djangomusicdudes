@@ -7,13 +7,13 @@
 			<a href="/">Music<span>Dudes</span></a>
 		</li>
 		<li class="active">
-			<a href="#browse"><i class="fas fa-home"></i>Browse</a>
+			<a id="#browse"><i class="fas fa-home"></i>Browse</a>
 		</li>
 		<li>
-			<a href="#playlists"><i class="fas fa-folders"></i>Playlists</a>
+			<a id="#playlists"><i class="fas fa-folders"></i>Playlists</a>
 		</li>
 		<li>
-			<a href="#favorites"><i class="fas fa-heart"></i>Favorites</a>
+			<a id="#favorites"><i class="fas fa-heart"></i>Favorites</a>
 		</li>
 	</ul>
 	<div class="cr_pl">
@@ -34,16 +34,13 @@
 		<button class="btn dropdown-toggle fal fa-user-circle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ user.username }}</button>
 		<div class="dropdown-menu dropdown-menu-right">
 			<a id="account" class="dropdown-item">Account</a>
-			<a class="dropdown-item" href="/logout/">Log Out</a>
+			<a id="logout" class="dropdown-item" href="/logout/">Log Out</a>
 		</div>
 	</div>
 </div>
 <!-- Controls Bar -->
 <div class="controls-bar">
 	<div class="controls-bar-left">
-		{% if profile.pref_mean_x %}
-			{% include 'overallsystem/now-playing.html' %}
-		{% endif %}
 	</div>
 	<div class="controls-bar-center">
 		<div class="player-controls-buttons">
@@ -78,7 +75,7 @@
 <!-- Main View -->
 <div class="main-view">
 	{% block songs %}
-	{% if profile.pref_mean_x %}
+	{% if profile.pref_mean_energy %}
 		<div class="all-songs">
 	{% else %}
 		<div class="all-songs full">
@@ -101,18 +98,13 @@
 				</div>
 				<div class="song-duration">{{ track.duration_ms }}</div>
 				<div class="button-add">
-					{% for song in fave %}
-						{% if track.id == song.track.track %}
-							<button class="fal fa-heart sr-only" title="Add to Favorites"></button>
-							<button class="fas fa-heart" title="Add to Favorites"></button>
-						{% else %}
-							<button class="fal fa-heart" title="Add to Favorites"></button>
-							<button class="fas fa-heart sr-only" title="Add to Favorites"></button>
-						{% endif %}
-					{% empty %}
+					{% if track.id in fave %}
+						<button class="fal fa-heart sr-only" title="Add to Favorites"></button>
+						<button class="fas fa-heart" title="Add to Favorites"></button>
+					{% else %}
 						<button class="fal fa-heart" title="Add to Favorites"></button>
 						<button class="fas fa-heart sr-only" title="Add to Favorites"></button>
-					{% endfor %}
+					{% endif %}
 					<button class="fal fa-plus" title="Add to Playlist"></button>
 				</div>
 				<div class="listens-ratings">
