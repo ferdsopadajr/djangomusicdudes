@@ -3,16 +3,16 @@ from django.db import models
 # Create your models here.
 class Profiles(models.Model):
 	user = models.CharField(max_length=100, primary_key=True)
-	pref_mean_acousticness = models.FloatField(null=True)
-	pref_mean_danceability = models.FloatField(null=True)
-	pref_mean_energy = models.FloatField(null=True)
-	pref_mean_instrumentalness = models.FloatField(null=True)
-	pref_mean_key = models.FloatField(null=True)
-	pref_mean_liveness = models.FloatField(null=True)
-	pref_mean_loudness = models.FloatField(null=True)
-	pref_mean_speechiness = models.FloatField(null=True)
-	pref_mean_tempo = models.FloatField(null=True)
-	pref_mean_valence = models.FloatField(null=True)
+	acousticness = models.FloatField(null=True)
+	danceability = models.FloatField(null=True)
+	energy = models.FloatField(null=True)
+	instrumentalness = models.FloatField(null=True)
+	key = models.FloatField(null=True)
+	liveness = models.FloatField(null=True)
+	loudness = models.FloatField(null=True)
+	speechiness = models.FloatField(null=True)
+	tempo = models.FloatField(null=True)
+	valence = models.FloatField(null=True)
 
 class Tracks(models.Model):
 	track = models.CharField(max_length=50, primary_key=True)

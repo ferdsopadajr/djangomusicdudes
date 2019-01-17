@@ -19,10 +19,9 @@ def read_file(track_id = None):
 				convert_time(track)
 			return tracks
 		else:
-			tracks = [dict(row) for row in reader if dict(row)['id'] == track_id][0]
-			for track in tracks:
-				convert_time(track)
-			return tracks
+			track = [dict(row) for row in reader if dict(row)['id'] == track_id][0]
+			convert_time(track)
+			return track
 	file.close()
 
 def convert_time(track):
@@ -69,12 +68,8 @@ def plot_points():
 	plt.legend(loc = 4)
 	plt.show()
 
-def calc_dist(tracks, query, **kwargs):
+def calc_dist(tracks, query):
 	distance = {key:[] for key in query if key not in ['track_name', 'artists', 'id', 'genre', 'duration_ms', 'mode']}
-	
-	if sorted(['acousticness','danceability','energy','instrumentalness','key','liveness','loudness','speechiness','tempo','valence']) == sorted(list(kwargs.keys())):
-		query['valence'] = kwargs['valence']
-		query['energy'] = kwargs['energy']
 
 	for track_id in tracks:
 		feats = read_file(track_id)
@@ -90,8 +85,9 @@ def euclidean_distance(point, centroids = None, dim = '2d', query = None):
 	distance = {}
 	if dim == '1d':
 		# Get distance for each audio feature in the cluster
-		if query['id'] in point:
-			point.remove(query['id'])
+		if 'id' in query.keys():
+			if query['id'] in point:
+				point.remove(query['id'])
 		
 		distance = calc_dist(point, query)
 
@@ -134,7 +130,10 @@ def k_means(quadrant, k_count = 5):
 
 		# Find nearest centroid for each data point using Euclidean Distance
 		for track in quadrant['data_points']:
-			point = [float(track['valence']), float(track['energy']), track['id']]
+			if 'id' in track.keys():
+				point = [float(track['valence']), float(track['energy']), track['id']]
+			else:
+				point = [float(track['valence']), float(track['energy'])]
 			clusters[euclidean_distance(point, centroids)].append(point)
 
 		# Update centroids
@@ -188,10 +187,10 @@ def cluster_points(**kwargs):
 	'''
 
 	# Get mood quadrant to start clustering
-	if kwargs['preference']:
-		quadrant = kwargs['preference']
-	else:
+	if 'track_id' in kwargs.keys():
 		quadrant = determine_mood(read_file(kwargs['track_id']))
+	else:
+		quadrant = determine_mood(kwargs['preference'])
 
 	# Elbow method to determine clusters count
 	# sse = elbow_method(quadrant)
@@ -220,10 +219,7 @@ def cluster_points(**kwargs):
 	print('Elapsed time:', timedelta(seconds = time.time() - start))
 
 	# Recommendations ranking
-	if pref_mean_x and pref_mean_y:
-		distance = calc_dist(songs_to_recommend, quadrant['feat'], valence=pref_mean_x, energy=pref_mean_y)
-	else:
-		distance = calc_dist(songs_to_recommend, quadrant['feat'])
+	distance = calc_dist(songs_to_recommend, quadrant['feat'])
 	rank = {k:{} for k in distance}
 
 	# Get indices of each recommended track in minimum ranking of each audio feature

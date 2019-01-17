@@ -32,19 +32,22 @@ def signup(request):
 @login_required(redirect_field_name=None)
 def main(request):
 	songs = [track for track in read_file()]
+	for track in songs:
+		track = Tracks(track=track['id']).save()
 	profile = Profiles.objects.get(user=request.user)
-	if profile.pref_mean_energy:
-		rec_songs = cluster_points(query=preference(profile, Profiles._meta.fields))
-		print(rec_songs)	
+	rec_songs = []
+	if profile.energy:
+		rec_songs = cluster_points(preference=preference(profile, Profiles._meta.fields))
 	if request.path == '/main/' or request.path == '/':
-		return render(request, 'overallsystem/main.html', {'form': MainForm(), 'songs': songs, 'profile': Profiles.objects.get(user=request.user), 'fave': [obj.track.track for obj in Profiles.objects.get(user=request.user).userfaves_set.all()]})
+		return render(request, 'overallsystem/main.html', {'form': MainForm(), 'songs': songs, 'rec_songs': rec_songs, 'profile': Profiles.objects.get(user=request.user), 'fave': [obj.track.track for obj in Profiles.objects.get(user=request.user).userfaves_set.all()]})
 	else:
 		return HttpResponseNotFound('<h1>Page not found</h1>')
 
 @csrf_exempt
 def gen_rec(request):
 	profile = Profiles.objects.get(user=request.user)
-	rec_songs = cluster_points(request.POST['track_id'], profile.pref_mean_x, profile.pref_mean_y)
+	rec_songs = cluster_points(track_id=request.POST['track_id'], preference=preference(profile, Profiles._meta.fields))
+	print(rec_songs)
 	return render(request, 'overallsystem/recommendations.html', {'rec_songs': rec_songs, 'profile': Profiles.objects.get(user=request.user)})
 
 @csrf_exempt
@@ -52,8 +55,9 @@ def upd_cbl(request):
 	track = read_file(request.POST['track_id'])
 	if request.POST['past_track']:
 		past_track = read_file(request.POST['past_track'])
-		print(past_track['valence'], past_track['energy'])
-	profile = Profiles(user=request.user, pref_mean_x=track['valence'], pref_mean_y=track['energy'])
+		print(track['acousticness'], track['danceability'], track['energy'], track['instrumentalness'], track['key'], track['liveness'], track['loudness'], track['speechiness'], track['tempo'], track['valence'])
+		# do preference mean computation here
+	profile = Profiles(user=request.user, acousticness=track['acousticness'], danceability=track['danceability'], energy=track['energy'], instrumentalness=track['instrumentalness'], key=track['key'], liveness=track['liveness'], loudness=track['loudness'], speechiness=track['speechiness'], tempo=track['tempo'], valence=track['valence'])
 	profile.save()
 	return render(request, 'overallsystem/now-playing.html', {'track': track, 'fave': [obj.track.track for obj in Profiles.objects.get(user=request.user).userfaves_set.all()]})
 
@@ -73,7 +77,4 @@ def favorites(request):
 	fave = Profiles.objects.get(user=request.user).userfaves_set.all()
 	songs = [obj.track.track for obj in fave]
 	favorites = [read_file(track) for track in songs]
-	for track in favorites:
-		track['duration_ms'] = datetime.fromtimestamp(int(track['duration_ms'])/1000).strftime('%#M:%S')
-	print(favorites)
 	return render(request, 'overallsystem/favorites.html', {'fave': favorites})

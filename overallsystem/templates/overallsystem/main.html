@@ -75,7 +75,7 @@
 <!-- Main View -->
 <div class="main-view">
 	{% block songs %}
-	{% if profile.pref_mean_energy %}
+	{% if profile.energy %}
 		<div class="all-songs">
 	{% else %}
 		<div class="all-songs full">
@@ -118,8 +118,13 @@
 			{% endfor %}
 		</div>
 	</div>
-	<div class="mood-rec sr-only">
+	{% if profile.energy %}
+		<div class="mood-rec">
+	{% else %}
+		<div class="mood-rec sr-only">
+	{% endif %}
 		{% include 'overallsystem/recommendations.html' %}
+	}
 	</div>
 	{% endblock %}
 </div>
