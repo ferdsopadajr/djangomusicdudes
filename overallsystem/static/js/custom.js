@@ -1,4 +1,25 @@
 var track_id;
+var track_max_duration;
+var listening_duration;
+var counter;
+var past_track;
+
+// timer
+function countdown() {
+	console.log(listening_duration);
+	if (listening_duration <= 0) {
+		clearInterval(counter);
+		console.log('ldend: '+listening_duration);
+		return;
+	}
+	listening_duration -= 1000;
+	width = 100 - ((listening_duration / track_max_duration) * 100);
+	console.log(width);
+	document.getElementById('playback-bar').style.width = width+'%';
+	document.getElementById('playback-bar').setAttribute('aria-valuenow', track_max_duration - listening_duration);
+	console.log(listening_duration);
+}
+
 $(function() {
 	// sidebar link
 	$('.sidebar-nav li:not(:first-child)').on('click', 'a', function() {
@@ -13,6 +34,13 @@ $(function() {
 					$('.all-songs').html(data);
 				}
 			);
+		} else if ($(this).attr('id') == '#browse') {
+			$.post(
+				'/main/',
+				function(data) {
+					$('body').html(data);
+				}
+			);
 		}
 	});
 
@@ -21,23 +49,22 @@ $(function() {
 	// display recommendations
 	$('.main-view').on('click', '.fa-play', function() {
 		track_id = $(this).parent().attr('id');
-		past_track = null;
+		clearInterval(counter);
+		track = null;
 		if ($('.controls-bar').attr('id')) {
 			past_track = $('.controls-bar').attr('id');
 		}
 		console.log(past_track);
 		$('.all-songs').removeClass('full');
 		$(this).addClass('sr-only').siblings('.fa-pause').removeClass('sr-only').parent().siblings('.song').find('.fa-pause').addClass('sr-only').siblings('.fa-play').removeClass('sr-only');
-		$('.player-controls-buttons .fa-play').addClass('sr-only').siblings('.fa-pause').removeClass('sr-only');
 		$.post(
 			'/upd_cbl/',
 			{
-				track_id: track_id,
-				past_track: past_track,
+				track_id: track_id
 			},
 			function(data) {
 				console.log($('.song-info-name').val());
-				$('.controls-bar-left').html(data);
+				$('.controls-bar-left-center').html(data);
 				$('.controls-bar').attr('id',track_id);
 			}
 		);
@@ -48,9 +75,25 @@ $(function() {
 			},
 			function(data) {
 				$('.mood-rec').removeClass('sr-only').html(data);
+				$('.player-controls-buttons .fa-play').addClass('sr-only').siblings('.fa-pause').removeClass('sr-only');
 			}
 		);
+		$.post(
+			'/duration/',
+			{
+				track_id: track_id
+			},
+			function(data) {
+				track_max_duration = data;
+				listening_duration = track_max_duration;
+				console.log(track_max_duration);
+			}
+		);
+		counter = setInterval(countdown, 1000);
+		$(this).addClass('sr-only').siblings('.fa-pause').removeClass('sr-only').parent().siblings('.song').find('.fa-pause').addClass('sr-only').siblings('.fa-play').removeClass('sr-only');
 	}).on('click', '.fa-pause', function() {
+		clearInterval(counter);
+		console.log(listening_duration);
 		$(this).addClass('sr-only').siblings('.fa-play').removeClass('sr-only');
 		$('.player-controls-buttons .fa-pause').addClass('sr-only').siblings('.fa-play').removeClass('sr-only');
 	});
@@ -83,7 +126,7 @@ $(function() {
 		}
 	});
 
-	$('.controls-bar-left').on('click', '.fal.fa-heart', function() {
+	$('.controls-bar-left-center').on('click', '.fal.fa-heart', function() {
 		track_id = $(this).parents('.controls-bar').attr('id');
 		// add song to favorites
 		$.post(
@@ -108,10 +151,13 @@ $(function() {
 	});
 
 	// player controls
-	$('.player-controls-buttons').on('click', '.fa-pause', function() {
+	$('.controls-bar-left-center').on('click', '.fa-pause', function() {
+		clearInterval(counter);
+		console.log(listening_duration);
 		$(this).addClass('sr-only').siblings('.fa-play').removeClass('sr-only');
 		$('.main-view').find('div#'+track_id).find('.fa-pause').addClass('sr-only').siblings('.fa-play').removeClass('sr-only');
 	}).on('click', '.fa-play', function() {
+		counter = setInterval(countdown, 1000);
 		$(this).addClass('sr-only').siblings('.fa-pause').removeClass('sr-only');
 		$('.main-view').find('div#'+track_id).find('.fa-play').addClass('sr-only').siblings('.fa-pause').removeClass('sr-only');
 	}).on('click', '.fa-random, .fa-repeat-alt', function() {

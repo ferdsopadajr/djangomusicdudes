@@ -11,6 +11,7 @@ urlpatterns = [
   path('main/', views.main),
   path('favorites/', views.favorites),
   path('gen_rec/', views.gen_rec),
+  path('duration/', views.duration),
   path('upd_cbl/', views.upd_cbl),
   path('add_to_fav/', views.add_to_fav),
   path('del_to_fav/', views.del_to_fav),

@@ -10,17 +10,19 @@ import time
 
 # K-Means Clustering Module
 
-def read_file(track_id = None):
+def read_file(track_id = None, timeconverted = True):
 	with open('452Tracks.csv', 'r') as file:
 		reader = csv.DictReader(file)
 		if not track_id:
 			tracks = [dict(row) for row in reader]
-			for track in tracks:
-				convert_time(track)
+			if timeconverted == True:
+				for track in tracks:
+					convert_time(track)
 			return tracks
 		else:
 			track = [dict(row) for row in reader if dict(row)['id'] == track_id][0]
-			convert_time(track)
+			if timeconverted == True:
+				convert_time(track)
 			return track
 	file.close()
 
@@ -31,13 +33,13 @@ def determine_mood(row):
 	# Return mood quadrant of track
 	songs = read_file()
 	if float(row['valence']) > 0.5 and float(row['energy']) >= 0.5:
-		return {'mood': 'happy', 'v_low': 0.501, 'v_high': 1.001, 'e_low': 0.5, 'e_high': 1.001, 'feat': row, 'data_points': [feat for feat in songs if float(feat['valence']) > 0.5 and float(feat['energy']) >= 0.5]}
+		return {'mood': 'Happy', 'v_low': 0.501, 'v_high': 1.001, 'e_low': 0.5, 'e_high': 1.001, 'feat': row, 'data_points': [feat for feat in songs if float(feat['valence']) > 0.5 and float(feat['energy']) >= 0.5]}
 	elif float(row['valence']) <= 0.5 and float(row['energy']) > 0.5:
-		return {'mood': 'angry', 'v_low': 0, 'v_high': 0.501, 'e_low': 0.501, 'e_high': 1.001, 'feat': row, 'data_points': [feat for feat in songs if float(feat['valence']) > 0.5 and float(feat['energy']) >= 0.5]}
+		return {'mood': 'Angry', 'v_low': 0, 'v_high': 0.501, 'e_low': 0.501, 'e_high': 1.001, 'feat': row, 'data_points': [feat for feat in songs if float(feat['valence']) > 0.5 and float(feat['energy']) >= 0.5]}
 	elif float(row['valence']) >= 0.5 and float(row['energy']) < 0.5:
-		return {'mood': 'peaceful', 'v_low': 0.5, 'v_high': 1.001, 'e_low': 0, 'e_high': 0.5, 'feat': row, 'data_points': [feat for feat in songs if float(feat['valence']) > 0.5 and float(feat['energy']) >= 0.5]}
+		return {'mood': 'Peaceful', 'v_low': 0.5, 'v_high': 1.001, 'e_low': 0, 'e_high': 0.5, 'feat': row, 'data_points': [feat for feat in songs if float(feat['valence']) > 0.5 and float(feat['energy']) >= 0.5]}
 	elif float(row['valence']) < 0.5 and float(row['energy']) <= 0.5:
-		return {'mood': 'sad', 'v_low': 0, 'v_high': 0.5, 'e_low': 0, 'e_high': 0.501, 'feat': row, 'data_points': [feat for feat in songs if float(feat['valence']) > 0.5 and float(feat['energy']) >= 0.5]}
+		return {'mood': 'Sad', 'v_low': 0, 'v_high': 0.5, 'e_low': 0, 'e_high': 0.501, 'feat': row, 'data_points': [feat for feat in songs if float(feat['valence']) > 0.5 and float(feat['energy']) >= 0.5]}
 
 def plot_points():
 	# Energy + Valence Mapping - Plot points to their corresponding mood (Thayer's Mood Model)

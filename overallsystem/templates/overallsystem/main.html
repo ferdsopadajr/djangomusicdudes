@@ -40,24 +40,25 @@
 </div>
 <!-- Controls Bar -->
 <div class="controls-bar">
-	<div class="controls-bar-left">
-	</div>
-	<div class="controls-bar-center">
-		<div class="player-controls-buttons">
-			<button class="fal fa-random" title="Enable shuffle"></button>
-			<button class="fal fa-step-backward" title="Previous"></button>
-			<button class="fas fa-play" title="Play"></button>
-			<button class="fas fa-pause sr-only" title="Pause"></button>
-			<button class="fal fa-step-forward" title="Next"></button>
-			<button class="fal fa-repeat-alt" title="Enable repeat"></button>
-			<button class="fal fa-repeat-1-alt sr-only" title="Disable repeat"></button>
-		</div>
-		<div class="playback-bar">
-			<div class="playback-bar-progress-time">0:18</div>
-			<div class="progress">
-				<div class="progress-bar" role="progressbar" style="width: 40%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+	<div class="controls-bar-left-center">
+		<div class="controls-bar-left"></div>
+		<div class="controls-bar-center">
+			<div class="player-controls-buttons">
+				<button class="fal fa-random" title="Enable shuffle"></button>
+				<button class="fal fa-step-backward" title="Previous"></button>
+				<button class="fas fa-play" title="Play"></button>
+				<button class="fas fa-pause sr-only" title="Pause"></button>
+				<button class="fal fa-step-forward" title="Next"></button>
+				<button class="fal fa-repeat-alt" title="Enable repeat"></button>
+				<button class="fal fa-repeat-1-alt sr-only" title="Disable repeat"></button>
 			</div>
-			<div class="playback-bar-progress-time">3:00</div>
+			<div class="playback-bar">
+				<div class="playback-bar-progress-time">0:00</div>
+				<div class="progress">
+					<div id="playback-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+				</div>
+				<div class="playback-bar-progress-time">0:00</div>
+			</div>
 		</div>
 	</div>
 	<div class="controls-bar-right">
@@ -88,17 +89,17 @@
 				<h6>Listens</h6>
 				<h6>Ratings</h6>
 			</div>
-			{% for track in songs %}
-			<div class="song" id="{{ track.id }}">
+			{% for song in songs %}
+			<div class="song" id="{{ song.id }}">
 				<button class="fas fa-play" title="Play"></button>
 				<button class="fas fa-pause sr-only"></button>
 				<div class="song-info">
-					<div class="song-info-name">{{ track.track_name }}</div>
-					<div class="song-info-artists">{{ track.artists }}</div>
+					<div class="song-info-name">{{ song.track_name }}</div>
+					<div class="song-info-artists">{{ song.artists }}</div>
 				</div>
-				<div class="song-duration">{{ track.duration_ms }}</div>
+				<div class="song-duration">{{ song.duration_ms }}</div>
 				<div class="button-add">
-					{% if track.id in fave %}
+					{% if song.id in fave %}
 						<button class="fal fa-heart sr-only" title="Add to Favorites"></button>
 						<button class="fas fa-heart" title="Add to Favorites"></button>
 					{% else %}
@@ -108,7 +109,11 @@
 					<button class="fal fa-plus" title="Add to Playlist"></button>
 				</div>
 				<div class="listens-ratings">
-					<div class="listens">00001</div>
+					{% for ins in track %}
+						{% if ins.track == song.id %}
+						<div class="listens">{{ ins.listens|stringformat:"05d" }}</div>
+						{% endif %}
+					{% endfor %}
 					<!-- ratings formula
 						ratings = (sum(listenduration)+fvpl) / ((sum(listens)*maxdurationeach)+fvpl)
 					 -->

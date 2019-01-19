@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
-from overallsystem.modules.kmeans import cluster_points, read_file, preference
+from overallsystem.modules.kmeans import cluster_points, read_file, preference, determine_mood
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from datetime import timedelta
@@ -30,33 +30,47 @@ def signup(request):
 # 	return render(request, 'overallsystem/login.html')
 
 @login_required(redirect_field_name=None)
+@csrf_exempt
 def main(request):
 	songs = [track for track in read_file()]
-	for track in songs:
-		track = Tracks(track=track['id']).save()
+	# Uncomment this to add the tracks to database
+	# for track in songs:
+	# 	track = Tracks(track=track['id']).save()
 	profile = Profiles.objects.get(user=request.user)
-	rec_songs = []
+	pref = preference(profile, Profiles._meta.fields)
 	if profile.energy:
-		rec_songs = cluster_points(preference=preference(profile, Profiles._meta.fields))
+		mood = determine_mood(pref)['mood']
+		rec_songs = cluster_points(preference=pref)
 	if request.path == '/main/' or request.path == '/':
-		return render(request, 'overallsystem/main.html', {'form': MainForm(), 'songs': songs, 'rec_songs': rec_songs, 'profile': Profiles.objects.get(user=request.user), 'fave': [obj.track.track for obj in Profiles.objects.get(user=request.user).userfaves_set.all()]})
+		return render(request, 'overallsystem/main.html', {'form': MainForm(), 'songs': songs, 'mood': mood, 'track': Tracks.objects.all(), 'rec_songs': rec_songs, 'profile': profile, 'fave': [obj.track.track for obj in profile.userfaves_set.all()]})
 	else:
 		return HttpResponseNotFound('<h1>Page not found</h1>')
 
 @csrf_exempt
 def gen_rec(request):
 	profile = Profiles.objects.get(user=request.user)
+	mood = determine_mood(read_file(request.POST['track_id']))['mood']
 	rec_songs = cluster_points(track_id=request.POST['track_id'], preference=preference(profile, Profiles._meta.fields))
-	print(rec_songs)
-	return render(request, 'overallsystem/recommendations.html', {'rec_songs': rec_songs, 'profile': Profiles.objects.get(user=request.user)})
+	return render(request, 'overallsystem/recommendations.html', {'rec_songs': rec_songs, 'mood': mood, 'profile': profile})
+
+@csrf_exempt
+def duration(request):
+	if request.POST['track_id']:
+		track = read_file(request.POST['track_id'], False)
+		return HttpResponse(int(track['duration_ms']))
+	else:
+		return HttpResponse()
+
+@csrf_exempt
+def compute_pref_mean(request):
+	# do preference mean computation here
+	pass
 
 @csrf_exempt
 def upd_cbl(request):
+	# listens computation
+	listens = Tracks(track=request.POST['track_id'], listens=Tracks.objects.get(track=request.POST['track_id']).listens+1).save()
 	track = read_file(request.POST['track_id'])
-	if request.POST['past_track']:
-		past_track = read_file(request.POST['past_track'])
-		print(track['acousticness'], track['danceability'], track['energy'], track['instrumentalness'], track['key'], track['liveness'], track['loudness'], track['speechiness'], track['tempo'], track['valence'])
-		# do preference mean computation here
 	profile = Profiles(user=request.user, acousticness=track['acousticness'], danceability=track['danceability'], energy=track['energy'], instrumentalness=track['instrumentalness'], key=track['key'], liveness=track['liveness'], loudness=track['loudness'], speechiness=track['speechiness'], tempo=track['tempo'], valence=track['valence'])
 	profile.save()
 	return render(request, 'overallsystem/now-playing.html', {'track': track, 'fave': [obj.track.track for obj in Profiles.objects.get(user=request.user).userfaves_set.all()]})

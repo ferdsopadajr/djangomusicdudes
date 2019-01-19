@@ -1,20 +1,12 @@
 {% if profile.energy %}
 	<div class="current-mood">
 		<div class="mood-sec">
-			<h6 class="mood">Current Mood:</h6>
-			<div class="heatmap-cont">
-				<div class="mood-heatmap"></div>
-				<div class="heatpoint" title="Sad"><!-- append value to margin-left attribute coming from cfd-rate; change its title --></div>
-			</div>
-		</div>
-		<div class="cfd-sec">
-			<h6 class="cfd-rate">Confidence Rate:</h6>
-			<div class="cfd-pct">%<!-- add percentage computation here --></div>
+			<h6 class="mood">Current Mood:<span>{{ mood }}</span></h6>
 		</div>
 	</div>
 	<div class="rec">
 		<div class="rec-title">
-			<h5>Suggested Songs</h5>
+			<h5>Recommended</h5>
 		</div>
 		<div class="rec-container">
 			<div class="song-bdr-top"></div>
