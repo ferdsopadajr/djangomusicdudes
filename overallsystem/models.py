@@ -19,6 +19,11 @@ class Tracks(models.Model):
 	listens = models.IntegerField(default=0)
 	ratings = models.FloatField(default=0)
 
+class UserListens(models.Model):
+	user = models.ForeignKey(Profiles, on_delete=models.CASCADE)
+	track = models.ForeignKey(Tracks, on_delete=models.CASCADE)
+	listen_duration = models.IntegerField(default=0)
+
 class Playlists(models.Model):
 	user = models.ForeignKey(Profiles, on_delete=models.CASCADE)
 	playlist_name = models.CharField(max_length=100)

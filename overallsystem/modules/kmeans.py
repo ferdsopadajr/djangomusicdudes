@@ -1,11 +1,10 @@
 from copy import deepcopy
 import csv
-from datetime import timedelta
+from datetime import timedelta, datetime
 from math import *
 import matplotlib.pyplot as plt
 import numpy as np
 from statistics import mean
-from datetime import datetime
 import time
 
 # K-Means Clustering Module
@@ -46,10 +45,10 @@ def plot_points():
 	songs = read_file()
 
 	# x = valence, y = energy
-	data1 = [float(feat[0]) for feat in songs if float(feat[0]) > 0.5 and float(feat[1]) >= 0.5], [float(feat[1]) for feat in songs if float(feat[0]) > 0.5 and float(feat[1]) >= 0.5]
-	data2 = [float(feat[0]) for feat in songs if float(feat[0]) <= 0.5 and float(feat[1]) > 0.5], [float(feat[1]) for feat in songs if float(feat[0]) <= 0.5 and float(feat[1]) > 0.5]
-	data3 = [float(feat[0]) for feat in songs if float(feat[0]) >= 0.5 and float(feat[1]) < 0.5], [float(feat[1]) for feat in songs if float(feat[0]) >= 0.5 and float(feat[1]) < 0.5]
-	data4 = [float(feat[0]) for feat in songs if float(feat[0]) < 0.5 and float(feat[1]) <= 0.5], [float(feat[1]) for feat in songs if float(feat[0]) < 0.5 and float(feat[1]) <= 0.5]
+	data1 = [float(feat['valence']) for feat in songs if float(feat['valence']) > 0.5 and float(feat['valence']) >= 0.5], [float(feat['energy']) for feat in songs if float(feat['valence']) > 0.5 and float(feat['energy']) >= 0.5]
+	data2 = [float(feat['valence']) for feat in songs if float(feat['valence']) <= 0.5 and float(feat['valence']) > 0.5], [float(feat['energy']) for feat in songs if float(feat['valence']) <= 0.5 and float(feat['energy']) > 0.5]
+	data3 = [float(feat['valence']) for feat in songs if float(feat['valence']) >= 0.5 and float(feat['valence']) < 0.5], [float(feat['energy']) for feat in songs if float(feat['valence']) >= 0.5 and float(feat['energy']) < 0.5]
+	data4 = [float(feat['valence']) for feat in songs if float(feat['valence']) < 0.5 and float(feat['valence']) <= 0.5], [float(feat['energy']) for feat in songs if float(feat['valence']) < 0.5 and float(feat['energy']) <= 0.5]
 	
 	data = [data1, data2, data3, data4]
 	colors = ['yellow', 'red', 'blue', 'black']
@@ -57,18 +56,19 @@ def plot_points():
 	
 	for data, color, group in zip(data, colors, groups):
 		x, y = data
-		plt.scatter(x, y, s = 20, edgecolors='none', c = color, label = group)
+		print(x, y)
+		# plt.scatter(x, y, s = 20, edgecolors='none', c = color, label = group)
 
-	plt.style.use('seaborn-whitegrid')
-	plt.xlabel('Valence')
-	plt.ylabel('Energy')
-	plt.title('Mood Map')
-	plt.xticks([0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1])
-	plt.yticks([0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1])
-	plt.axvline(0.5, color = 'k', linewidth = 1)
-	plt.axhline(0.5, color = 'k', linewidth = 1)
-	plt.legend(loc = 4)
-	plt.show()
+	# plt.style.use('seaborn-whitegrid')
+	# plt.xlabel('Valence')
+	# plt.ylabel('Energy')
+	# plt.title('Mood Map')
+	# plt.xticks([0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1])
+	# plt.yticks([0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1])
+	# plt.axvline(0.5, color = 'k', linewidth = 1)
+	# plt.axhline(0.5, color = 'k', linewidth = 1)
+	# plt.legend(loc = 4)
+	# plt.show()
 
 def calc_dist(tracks, query):
 	distance = {key:[] for key in query if key not in ['track_name', 'artists', 'id', 'genre', 'duration_ms', 'mode']}

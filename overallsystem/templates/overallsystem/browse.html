@@ -1,0 +1,42 @@
+<div class="song-bdr-top">
+	<h6>Listens</h6>
+	<h6>Ratings</h6>
+</div>
+{% for song in songs %}
+<div class="song" id="{{ song.id }}">
+	<button class="fas fa-play" title="Play"></button>
+	<button class="fas fa-pause sr-only"></button>
+	<div class="song-info">
+		<div class="song-info-name">{{ song.track_name }}</div>
+		<div class="song-info-artists">{{ song.artists }}</div>
+	</div>
+	<div class="song-duration">{{ song.duration_ms }}</div>
+	<div class="button-add">
+		{% if song.id in fave %}
+			<button class="fal fa-heart sr-only" title="Add to Favorites"></button>
+			<button class="fas fa-heart" title="Add to Favorites"></button>
+		{% else %}
+			<button class="fal fa-heart" title="Add to Favorites"></button>
+			<button class="fas fa-heart sr-only" title="Add to Favorites"></button>
+		{% endif %}
+		<button class="fal fa-plus" title="Add to Playlist"></button>
+	</div>
+	<div class="listens-ratings">
+		{% for ins in track %}
+			{% if ins.track == song.id %}
+			<div class="listens">{{ ins.listens|stringformat:"05d" }}</div>
+			{% endif %}
+		{% endfor %}
+		<!-- ratings formula
+			ratings = (sum(listenduration)+fvpl) / ((sum(listens)*maxdurationeach)+fvpl)
+			if track is clicked:
+			  maxduration = track.maxduration;
+			  while maxduration >= 0:
+			    maxduration -= 1000
+			  listeningduration = track.maxduration - maxduration
+			  listeningdurationpctg = (listeningduration / track.maxduration) * 100
+		 -->
+		<div class="ratings">100%</div>
+	</div>
+</div>
+{% endfor %}

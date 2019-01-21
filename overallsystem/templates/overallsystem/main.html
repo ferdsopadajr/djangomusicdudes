@@ -53,7 +53,7 @@
 				<button class="fal fa-repeat-1-alt sr-only" title="Disable repeat"></button>
 			</div>
 			<div class="playback-bar">
-				<div class="playback-bar-progress-time">0:00</div>
+				<div id="play-duration" class="playback-bar-progress-time">0:00</div>
 				<div class="progress">
 					<div id="playback-bar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 				</div>
@@ -85,42 +85,7 @@
 			<h5>All Songs</h5>
 		</div>
 		<div class="songs-container">
-			<div class="song-bdr-top">
-				<h6>Listens</h6>
-				<h6>Ratings</h6>
-			</div>
-			{% for song in songs %}
-			<div class="song" id="{{ song.id }}">
-				<button class="fas fa-play" title="Play"></button>
-				<button class="fas fa-pause sr-only"></button>
-				<div class="song-info">
-					<div class="song-info-name">{{ song.track_name }}</div>
-					<div class="song-info-artists">{{ song.artists }}</div>
-				</div>
-				<div class="song-duration">{{ song.duration_ms }}</div>
-				<div class="button-add">
-					{% if song.id in fave %}
-						<button class="fal fa-heart sr-only" title="Add to Favorites"></button>
-						<button class="fas fa-heart" title="Add to Favorites"></button>
-					{% else %}
-						<button class="fal fa-heart" title="Add to Favorites"></button>
-						<button class="fas fa-heart sr-only" title="Add to Favorites"></button>
-					{% endif %}
-					<button class="fal fa-plus" title="Add to Playlist"></button>
-				</div>
-				<div class="listens-ratings">
-					{% for ins in track %}
-						{% if ins.track == song.id %}
-						<div class="listens">{{ ins.listens|stringformat:"05d" }}</div>
-						{% endif %}
-					{% endfor %}
-					<!-- ratings formula
-						ratings = (sum(listenduration)+fvpl) / ((sum(listens)*maxdurationeach)+fvpl)
-					 -->
-					<div class="ratings">100%</div>
-				</div>
-			</div>
-			{% endfor %}
+			{% include 'overallsystem/browse.html' %}
 		</div>
 	</div>
 	{% if profile.energy %}

@@ -9,10 +9,13 @@ urlpatterns = [
   path('logout/', auth_views.LogoutView.as_view()),
   path('', views.main),
   path('main/', views.main),
+  path('browse/', views.browse),
   path('favorites/', views.favorites),
   path('gen_rec/', views.gen_rec),
   path('duration/', views.duration),
+  path('convert_time/', views.convert_time),
   path('upd_cbl/', views.upd_cbl),
+  path('backend_process/', views.backend_process),
   path('add_to_fav/', views.add_to_fav),
   path('del_to_fav/', views.del_to_fav),
 ]
