@@ -1,11 +1,11 @@
 from copy import deepcopy
-import csv
 from datetime import timedelta, datetime
 from math import *
+from statistics import mean
 import matplotlib.pyplot as plt
 import numpy as np
-from statistics import mean
 import time
+import csv
 
 # K-Means Clustering Module
 
@@ -24,6 +24,17 @@ def read_file(track_id = None, timeconverted = True):
 				convert_time(track)
 			return track
 	file.close()
+
+def compute_cols_mean(pref, fave, pref_cols):
+	if not pref and not fave:
+		return {'acousticness': None, 'danceability': None, 'energy': None, 'instrumentalness': None, 'key': None, 'liveness': None, 'loudness': None, 'speechiness': None, 'tempo': None, 'valence': None}
+	if pref or fave:
+		col_mean = {key:[] for key in pref_cols}
+		for col in pref_cols:
+			for item in [read_file(obj.track.track) for obj in pref]+[read_file(obj.track.track) for obj in fave]:
+				col_mean[col].append(float(item[col]))
+			col_mean[col] = round(mean(col_mean[col]), 3)
+		return col_mean
 
 def convert_time(track):
 	track['duration_ms'] = datetime.fromtimestamp(int(track['duration_ms'])/1000).strftime('%#M:%S')
@@ -175,7 +186,7 @@ def elbow_method(quadrant):
 	plt.show()
 
 def preference(profile, fields):
-	return {a.get_attname():getattr(profile, a.get_attname()) for a in fields if a.get_attname() != 'user'}
+	return {obj.get_attname():getattr(profile, obj.get_attname()) for obj in fields if obj.get_attname() != 'user'}
 
 
 def cluster_points(**kwargs):

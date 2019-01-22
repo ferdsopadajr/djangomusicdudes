@@ -58,7 +58,6 @@ $(function() {
 		}
 		if (past_track != track_id) {
 			clearInterval(counter);
-			$('.all-songs').removeClass('full');
 			$(this).addClass('sr-only').siblings('.fa-pause').removeClass('sr-only').parent().siblings('.song').find('.fa-pause').addClass('sr-only').siblings('.fa-play').removeClass('sr-only');
 			$.post(
 				'/upd_cbl/',
@@ -68,23 +67,33 @@ $(function() {
 				function(data) {
 					$('.controls-bar-left-center').html(data);
 					$('.controls-bar').attr('id',track_id);
+					$('.player-controls-buttons button').removeAttr('disabled');
 				}
 			);
-			$.post(
-				'/gen_rec/',
-				{
-					track_id: track_id
-				},
-				function(data) {
-					$('.mood-rec').removeClass('sr-only').html(data);
-				}
-			);
+			if (past_track != null && ((track_max_duration-listening_duration) >= (track_max_duration/2))) {
+				$.post(
+					'/add_to_pref/',
+					{
+						past_track: past_track,
+						play_duration: track_max_duration-listening_duration,
+						max_duration: track_max_duration
+					}
+				);
+				$.post(
+					'/gen_rec/',
+					{
+						track_id: track_id
+					},
+					function(data) {
+						$('.all-songs').removeClass('full');
+						$('.mood-rec').removeClass('sr-only').html(data);
+					}
+				);
+			}
 			$.post(
 				'/duration/',
 				{
-					track_id: track_id,
-					past_track: past_track,
-					listening_duration: listening_duration
+					track_id: track_id
 				},
 				function(data) {
 					listening_duration = track_max_duration = data;
@@ -94,9 +103,6 @@ $(function() {
 				'/backend_process/',
 				{
 					track_id: track_id
-				},
-				function(data) {
-					
 				}
 			);
 		}
@@ -118,6 +124,16 @@ $(function() {
 				track_id: track_id
 			}
 		);
+		$.post(
+			'/gen_rec/',
+			{
+				track_id: track_id
+			},
+			function(data) {
+				$('.all-songs').removeClass('full');
+				$('.mood-rec').removeClass('sr-only').html(data);
+			}
+		);
 		$(this).addClass('sr-only').siblings('.fas.fa-heart').removeClass('sr-only');
 		if ($('.controls-bar').attr('id') == track_id) {
 			$('.controls-bar-left .fal.fa-heart').addClass('sr-only').siblings('.fas.fa-heart').removeClass('sr-only');
@@ -129,6 +145,22 @@ $(function() {
 			'/del_to_fav/',
 			{
 				track_id: track_id
+			},
+			function(data) {
+				if (data == 'False') {
+					$('.all-songs').addClass('full');
+					$('.mood-rec').addClass('sr-only');
+				}
+			}
+		);
+		$.post(
+			'/gen_rec/',
+			{
+				track_id: track_id
+			},
+			function(data) {
+				// $('.all-songs').removeClass('full');
+				// $('.mood-rec').removeClass('sr-only').html(data);
 			}
 		);
 		$(this).addClass('sr-only').siblings('.fal.fa-heart').removeClass('sr-only');
@@ -146,6 +178,16 @@ $(function() {
 				track_id: track_id
 			}
 		);
+		$.post(
+			'/gen_rec/',
+			{
+				track_id: track_id
+			},
+			function(data) {
+				$('.all-songs').removeClass('full');
+				$('.mood-rec').removeClass('sr-only').html(data);
+			}
+		);
 		$(this).addClass('sr-only').siblings('.fas.fa-heart').removeClass('sr-only');
 		$('.main-view').find('div#'+track_id).find('.fal.fa-heart').addClass('sr-only').siblings('.fas.fa-heart').removeClass('sr-only');
 	}).on('click', '.fas.fa-heart', function() {
@@ -155,6 +197,22 @@ $(function() {
 			'/del_to_fav/',
 			{
 				track_id: track_id
+			},
+			function(data) {
+				if (data == 'False') {
+					$('.all-songs').addClass('full');
+					$('.mood-rec').addClass('sr-only');
+				}
+			}
+		);
+		$.post(
+			'/gen_rec/',
+			{
+				track_id: track_id
+			},
+			function(data) {
+				// $('.all-songs').removeClass('full');
+				// $('.mood-rec').removeClass('sr-only').html(data);
 			}
 		);
 		$(this).addClass('sr-only').siblings('.fal.fa-heart').removeClass('sr-only');

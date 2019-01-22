@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
-from overallsystem.modules.kmeans import plot_points, cluster_points, read_file, preference, determine_mood
+from overallsystem.modules.kmeans import plot_points, compute_cols_mean, cluster_points, read_file, preference, determine_mood
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from datetime import timedelta, datetime
+from statistics import mean
 from .forms import MainForm, CreateUserForm
 from .models import *
 
@@ -17,8 +18,7 @@ def signup(request):
 		form = CreateUserForm(request.POST)
 		if form.is_valid():
 			user = form.save()
-			profile = Profiles(user=user.username)
-			profile.save()
+			profile = Profiles(user=user.username).save()
 			messages.success(request, 'Account created successfully!')
 			return redirect('/login/')
 	else:
@@ -34,12 +34,13 @@ def signup(request):
 def main(request):
 	songs = [read_file(track.track) for track in Tracks.objects.all().order_by('-listens')]
 	# Uncomment this to add the tracks to database
+	# songs = [track for track in read_file()]
 	# for track in songs:
 	# 	track = Tracks(track=track['id']).save()
 	profile = Profiles.objects.get(user=request.user)
 	pref = preference(profile, Profiles._meta.fields)
-	mood = ''
-	rec_songs = []
+	mood = None
+	rec_songs = None
 	if profile.energy:
 		mood = determine_mood(pref)['mood']
 		rec_songs = cluster_points(preference=pref)
@@ -66,10 +67,17 @@ def backend_process(request):
 	return render(request, 'overallsystem/backend_process.html', {'track_id': request.POST['track_id']})
 
 @csrf_exempt
+def add_to_pref(request):
+	userlistens = UserListens(user=Profiles.objects.get(user=request.user), track=Tracks.objects.get(track=request.POST['past_track']), listen_duration=request.POST['play_duration']).save()
+	# if user play duration >= 50% of max duration add track to preference
+	profile = Profiles.objects.get(user=request.user)
+	col_mean = compute_cols_mean(profile.userlistens_set.all(), profile.userfaves_set.all(), preference(profile, Profiles._meta.fields))
+	profile = Profiles(user=request.user, acousticness=col_mean['acousticness'], danceability=col_mean['danceability'], energy=col_mean['energy'], instrumentalness=col_mean['instrumentalness'], key=col_mean['key'], liveness=col_mean['liveness'], loudness=col_mean['loudness'], speechiness=col_mean['speechiness'], tempo=col_mean['tempo'], valence=col_mean['valence']).save()
+	return HttpResponse()
+
+@csrf_exempt
 def duration(request):
 	if request.POST['track_id']:
-		if request.POST['past_track'] and request.POST['listening_duration']:
-			userlistens = UserListens(user=Profiles.objects.get(user=request.user), track=Tracks.objects.get(track=request.POST['past_track']))
 		track = read_file(request.POST['track_id'], False)
 		return HttpResponse(int(track['duration_ms']))
 	else:
@@ -80,28 +88,28 @@ def convert_time(request):
 	return HttpResponse(datetime.fromtimestamp(int(request.POST['play_duration'])/1000).strftime('%#M:%S'))
 
 @csrf_exempt
-def compute_pref_mean(request):
-	# do preference mean computation here
-	pass
-
-@csrf_exempt
 def upd_cbl(request):
 	# listens computation
-	# listens = Tracks(track=request.POST['track_id'], listens=Tracks.objects.get(track=request.POST['track_id']).listens+1).save()
+	listens = Tracks(track=request.POST['track_id'], listens=Tracks.objects.get(track=request.POST['track_id']).listens+1).save()
 	track = read_file(request.POST['track_id'])
-	profile = Profiles(user=request.user, acousticness=track['acousticness'], danceability=track['danceability'], energy=track['energy'], instrumentalness=track['instrumentalness'], key=track['key'], liveness=track['liveness'], loudness=track['loudness'], speechiness=track['speechiness'], tempo=track['tempo'], valence=track['valence'])
-	profile.save()
 	return render(request, 'overallsystem/now-playing.html', {'track': track, 'fave': [obj.track.track for obj in Profiles.objects.get(user=request.user).userfaves_set.all()]})
 
 @csrf_exempt
 def add_to_fav(request):
-	fave = UserFaves(user=Profiles.objects.get(user=request.user), track=Tracks.objects.get(track=request.POST['track_id']))
-	fave.save()
+	fave = UserFaves(user=Profiles.objects.get(user=request.user), track=Tracks.objects.get(track=request.POST['track_id'])).save()
+	profile = Profiles.objects.get(user=request.user)
+	col_mean = compute_cols_mean(profile.userlistens_set.all(), profile.userfaves_set.all(), preference(profile, Profiles._meta.fields))
+	profile = Profiles(user=request.user, acousticness=col_mean['acousticness'], danceability=col_mean['danceability'], energy=col_mean['energy'], instrumentalness=col_mean['instrumentalness'], key=col_mean['key'], liveness=col_mean['liveness'], loudness=col_mean['loudness'], speechiness=col_mean['speechiness'], tempo=col_mean['tempo'], valence=col_mean['valence']).save()
 	return HttpResponse()
 
 @csrf_exempt
 def del_to_fav(request):
 	UserFaves.objects.filter(user=Profiles.objects.get(user=request.user), track=Tracks.objects.get(track=request.POST['track_id'])).delete()
+	profile = Profiles.objects.get(user=request.user)
+	col_mean = compute_cols_mean(profile.userlistens_set.all(), profile.userfaves_set.all(), preference(profile, Profiles._meta.fields))
+	profile = Profiles(user=request.user, acousticness=col_mean['acousticness'], danceability=col_mean['danceability'], energy=col_mean['energy'], instrumentalness=col_mean['instrumentalness'], key=col_mean['key'], liveness=col_mean['liveness'], loudness=col_mean['loudness'], speechiness=col_mean['speechiness'], tempo=col_mean['tempo'], valence=col_mean['valence']).save()
+	if all(value == None for value in col_mean.values()):
+		return HttpResponse(False)
 	return HttpResponse()
 
 @csrf_exempt

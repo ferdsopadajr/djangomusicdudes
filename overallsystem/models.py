@@ -22,7 +22,7 @@ class Tracks(models.Model):
 class UserListens(models.Model):
 	user = models.ForeignKey(Profiles, on_delete=models.CASCADE)
 	track = models.ForeignKey(Tracks, on_delete=models.CASCADE)
-	listen_duration = models.IntegerField(default=0)
+	listen_duration = models.IntegerField()
 
 class Playlists(models.Model):
 	user = models.ForeignKey(Profiles, on_delete=models.CASCADE)

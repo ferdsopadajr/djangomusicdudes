@@ -44,12 +44,12 @@
 		<div class="controls-bar-left"></div>
 		<div class="controls-bar-center">
 			<div class="player-controls-buttons">
-				<button class="fal fa-random" title="Enable shuffle"></button>
-				<button class="fal fa-step-backward" title="Previous"></button>
-				<button class="fas fa-play" title="Play"></button>
+				<button class="fal fa-random" title="Enable shuffle" disabled></button>
+				<button class="fal fa-step-backward" title="Previous" disabled></button>
+				<button class="fas fa-play" title="Play" disabled></button>
 				<button class="fas fa-pause sr-only" title="Pause"></button>
-				<button class="fal fa-step-forward" title="Next"></button>
-				<button class="fal fa-repeat-alt" title="Enable repeat"></button>
+				<button class="fal fa-step-forward" title="Next" disabled></button>
+				<button class="fal fa-repeat-alt" title="Enable repeat" disabled></button>
 				<button class="fal fa-repeat-1-alt sr-only" title="Disable repeat"></button>
 			</div>
 			<div class="playback-bar">
@@ -75,27 +75,6 @@
 </div>
 <!-- Main View -->
 <div class="main-view">
-	{% block songs %}
-	{% if profile.energy %}
-		<div class="all-songs">
-	{% else %}
-		<div class="all-songs full">
-	{% endif %}
-		<div class="all-songs-title">
-			<h5>All Songs</h5>
-		</div>
-		<div class="songs-container">
-			{% include 'overallsystem/browse.html' %}
-		</div>
-	</div>
-	{% if profile.energy %}
-		<div class="mood-rec">
-	{% else %}
-		<div class="mood-rec sr-only">
-	{% endif %}
-		{% include 'overallsystem/recommendations.html' %}
-	}
-	</div>
-	{% endblock %}
+	{% include 'overallsystem/browse.html' %}
 </div>
 {% endblock %}

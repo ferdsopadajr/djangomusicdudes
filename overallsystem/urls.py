@@ -13,6 +13,7 @@ urlpatterns = [
   path('favorites/', views.favorites),
   path('gen_rec/', views.gen_rec),
   path('duration/', views.duration),
+  path('add_to_pref/', views.add_to_pref),
   path('convert_time/', views.convert_time),
   path('upd_cbl/', views.upd_cbl),
   path('backend_process/', views.backend_process),
