@@ -14,6 +14,8 @@ urlpatterns = [
   path('gen_rec/', views.gen_rec),
   path('duration/', views.duration),
   path('add_to_pref/', views.add_to_pref),
+  path('disp_listens/', views.disp_listens),
+  path('upd_rating/', views.upd_rating),
   path('convert_time/', views.convert_time),
   path('upd_cbl/', views.upd_cbl),
   path('backend_process/', views.backend_process),

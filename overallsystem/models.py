@@ -17,7 +17,7 @@ class Profiles(models.Model):
 class Tracks(models.Model):
 	track = models.CharField(max_length=50, primary_key=True)
 	listens = models.IntegerField(default=0)
-	ratings = models.FloatField(default=0)
+	ratings = models.IntegerField(default=0)
 
 class UserListens(models.Model):
 	user = models.ForeignKey(Profiles, on_delete=models.CASCADE)

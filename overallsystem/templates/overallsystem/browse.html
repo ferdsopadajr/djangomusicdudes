@@ -35,9 +35,9 @@
 					{% for ins in track %}
 						{% if ins.track == song.id %}
 						<div class="listens">{{ ins.listens|stringformat:"05d" }}</div>
+						<div class="ratings">{{ ins.ratings }}%</div>
 						{% endif %}
 					{% endfor %}
-					<div class="ratings">0%</div>
 				</div>
 			</div>
 			{% endfor %}

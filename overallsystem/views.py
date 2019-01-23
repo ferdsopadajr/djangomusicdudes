@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.template.loader import get_template
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
 from overallsystem.modules.kmeans import plot_points, compute_ratings, compute_cols_mean, cluster_points, read_file, preference, determine_mood
@@ -65,18 +66,31 @@ def backend_process(request):
 @csrf_exempt
 def add_to_pref(request):
 	UserListens(user=Profiles.objects.get(user=request.user), track=Tracks.objects.get(track=request.POST['past_track']), listen_duration=request.POST['play_duration']).save()
-	# rating formula
-	# 								(sum(listenduration)+(fvpl*maxdurationoftrack))
-	#	rating = --------------------------------------------------------------- * 100
-	# 					(sum(listens)*maxdurationoftrack)+(fvpl*maxdurationoftrack)
-	rating = compute_ratings(Tracks.objects.get(track=request.POST['past_track']).listens, [obj.listen_duration for obj in UserListens.objects.filter(track=Tracks.objects.get(track=request.POST['past_track']))], UserFaves.objects.filter(track=Tracks.objects.get(track=request.POST['past_track'])).count(), int(request.POST['max_duration']))
-
 	# if user play duration >= 50% of max duration add track to preference
 	if int(request.POST['play_duration']) >= (int(request.POST['max_duration'])/2):
 		profile = Profiles.objects.get(user=request.user)
 		col_mean = compute_cols_mean([obj for obj in UserListens.objects.filter(user=Profiles.objects.get(user=request.user)) if obj.listen_duration >= (int(read_file(obj.track.track, False)['duration_ms'])/2)], profile.userfaves_set.all(), preference(profile, Profiles._meta.fields))
 		Profiles(user=request.user, acousticness=col_mean['acousticness'], danceability=col_mean['danceability'], energy=col_mean['energy'], instrumentalness=col_mean['instrumentalness'], key=col_mean['key'], liveness=col_mean['liveness'], loudness=col_mean['loudness'], speechiness=col_mean['speechiness'], tempo=col_mean['tempo'], valence=col_mean['valence']).save()
-	return HttpResponse(str(rating)+'%')
+	return HttpResponse()
+
+@csrf_exempt
+def disp_listens(request):
+	listens = Tracks.objects.get(track=request.POST['track_id']).listens
+	temp = get_template('overallsystem/listens-ratings.html')
+	html = temp.render({'listens': listens})
+	return HttpResponse(html)
+
+@csrf_exempt
+def upd_rating(request):
+	# rating formula
+	# 								(sum(listenduration)+(fvpl*maxdurationoftrack))
+	#	rating = --------------------------------------------------------------- * 100
+	# 					(sum(listens)*maxdurationoftrack)+(fvpl*maxdurationoftrack)
+	if request.POST['past_track']:
+		rating = compute_ratings(Tracks.objects.get(track=request.POST['past_track']).listens, [obj.listen_duration for obj in UserListens.objects.filter(track=Tracks.objects.get(track=request.POST['past_track']))], UserFaves.objects.filter(track=Tracks.objects.get(track=request.POST['past_track'])).count(), int(request.POST['max_duration']))
+		print(rating)
+		Tracks(track=request.POST['past_track'], listens=Tracks.objects.get(track=request.POST['past_track']).listens, ratings=rating).save()
+	return HttpResponse(str(Tracks.objects.get(track=request.POST['past_track']).ratings)+'%')
 
 @csrf_exempt
 def duration(request):
@@ -101,6 +115,7 @@ def upd_cbl(request):
 def add_to_fav(request):
 	UserFaves(user=Profiles.objects.get(user=request.user), track=Tracks.objects.get(track=request.POST['track_id'])).save()
 	rating = compute_ratings(Tracks.objects.get(track=request.POST['track_id']).listens, [obj.listen_duration for obj in UserListens.objects.filter(track=Tracks.objects.get(track=request.POST['track_id']))], UserFaves.objects.filter(track=Tracks.objects.get(track=request.POST['track_id'])).count(), int(request.POST['max_duration']))
+	Tracks(track=request.POST['track_id'], ratings=rating).save()
 	profile = Profiles.objects.get(user=request.user)
 	col_mean = compute_cols_mean(profile.userlistens_set.all(), profile.userfaves_set.all(), preference(profile, Profiles._meta.fields))
 	Profiles(user=request.user, acousticness=col_mean['acousticness'], danceability=col_mean['danceability'], energy=col_mean['energy'], instrumentalness=col_mean['instrumentalness'], key=col_mean['key'], liveness=col_mean['liveness'], loudness=col_mean['loudness'], speechiness=col_mean['speechiness'], tempo=col_mean['tempo'], valence=col_mean['valence']).save()
