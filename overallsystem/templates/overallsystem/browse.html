@@ -37,15 +37,6 @@
 						<div class="listens">{{ ins.listens|stringformat:"05d" }}</div>
 						{% endif %}
 					{% endfor %}
-					<!-- ratings formula
-						ratings = (sum(listenduration)+fvpl) / ((sum(listens)*maxdurationeach)+fvpl)
-						if track is clicked:
-						  maxduration = track.maxduration;
-						  while maxduration >= 0:
-						    maxduration -= 1000
-						  listeningduration = track.maxduration - maxduration
-						  listeningdurationpctg = (listeningduration / track.maxduration) * 100
-					 -->
 					<div class="ratings">100%</div>
 				</div>
 			</div>

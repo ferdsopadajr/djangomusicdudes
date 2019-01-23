@@ -25,6 +25,9 @@ def read_file(track_id = None, timeconverted = True):
 			return track
 	file.close()
 
+def compute_ratings(listens_count, listen_durations, fvpl_count, max_duration):
+	pass
+
 def compute_cols_mean(pref, fave, pref_cols):
 	if not pref and not fave:
 		return {'acousticness': None, 'danceability': None, 'energy': None, 'instrumentalness': None, 'key': None, 'liveness': None, 'loudness': None, 'speechiness': None, 'tempo': None, 'valence': None}

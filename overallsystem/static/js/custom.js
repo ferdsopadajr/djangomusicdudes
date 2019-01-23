@@ -7,7 +7,11 @@ var past_track;
 $(function() {
 	// timer
 	function countdown() {
-		listening_duration -= 1000;
+		var reducer = 1000;
+		if (listening_duration < 1000 && listening_duration > 0) {
+			reducer = listening_duration;
+		}
+		listening_duration -= reducer;
 		width = 100 - ((listening_duration / track_max_duration) * 100);
 		document.getElementById('playback-bar').style.width = width+'%';
 		document.getElementById('playback-bar').setAttribute('aria-valuenow', track_max_duration - listening_duration);
@@ -70,7 +74,7 @@ $(function() {
 					$('.player-controls-buttons button').removeAttr('disabled');
 				}
 			);
-			if (past_track != null && ((track_max_duration-listening_duration) >= (track_max_duration/2))) {
+			if (past_track != null) {
 				$.post(
 					'/add_to_pref/',
 					{
@@ -79,16 +83,18 @@ $(function() {
 						max_duration: track_max_duration
 					}
 				);
-				$.post(
-					'/gen_rec/',
-					{
-						track_id: track_id
-					},
-					function(data) {
-						$('.all-songs').removeClass('full');
-						$('.mood-rec').removeClass('sr-only').html(data);
-					}
-				);
+				if ((track_max_duration-listening_duration) >= (track_max_duration/2)) {
+					$.post(
+						'/gen_rec/',
+						{
+							track_id: track_id
+						},
+						function(data) {
+							$('.all-songs').removeClass('full');
+							$('.mood-rec').removeClass('sr-only').html(data);
+						}
+					);
+				}
 			}
 			$.post(
 				'/duration/',
