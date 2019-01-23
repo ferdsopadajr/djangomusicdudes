@@ -661,3 +661,59 @@ a:hover {
 .login .login-head button:focus {
   box-shadow: none !important;
 }
+
+.backend {
+  background: #efefef !important;
+}
+.backend th, .backend td {
+  padding: 5px;
+}
+.backend .song-selection {
+  overflow-y: scroll;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  color: black;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+}
+.backend .song-selection .selected-song {
+  padding-left: 15px;
+  display: flex;
+}
+.backend .song-selection .selected-song p {
+  padding-left: 15px;
+  color: red;
+}
+.backend .if-stmt {
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+}
+.backend .if-stmt h6 {
+  color: red;
+}
+.backend .if-stmt h6 span {
+  color: #36273c;
+}
+.backend .user-song-preferences h4 {
+  padding-top: 15px;
+}
+.backend .mood-analysis .mood-head {
+  display: flex;
+  align-items: center;
+}
+.backend .mood-analysis .mood-head p {
+  color: red;
+  padding-left: 15px;
+  margin-bottom: 0;
+}
+.backend .mood-analysis .determined-mood {
+  padding-left: 15px;
+  display: flex;
+}
+.backend .mood-analysis .determined-mood p {
+  padding-left: 15px;
+  color: red;
+}

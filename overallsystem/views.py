@@ -55,8 +55,8 @@ def browse(request):
 @csrf_exempt
 def gen_rec(request):
 	profile = Profiles.objects.get(user=request.user)
-	mood = determine_mood(read_file(request.POST['track_id']))['mood']
-	rec_songs = cluster_points(track_id=request.POST['track_id'], preference=preference(profile, Profiles._meta.fields))
+	mood = determine_mood(preference(profile, Profiles._meta.fields))['mood']
+	rec_songs = cluster_points(preference=preference(profile, Profiles._meta.fields))
 	return render(request, 'overallsystem/recommendations.html', {'rec_songs': rec_songs, 'mood': mood, 'profile': profile})
 
 @csrf_exempt

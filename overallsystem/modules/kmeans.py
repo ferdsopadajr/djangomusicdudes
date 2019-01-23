@@ -204,10 +204,7 @@ def cluster_points(**kwargs):
 	'''
 
 	# Get mood quadrant to start clustering
-	if 'track_id' in kwargs.keys():
-		quadrant = determine_mood(read_file(kwargs['track_id']))
-	else:
-		quadrant = determine_mood(kwargs['preference'])
+	quadrant = determine_mood(kwargs['preference'])
 
 	# Elbow method to determine clusters count
 	# sse = elbow_method(quadrant)

@@ -55,6 +55,15 @@ $(function() {
 
 	$.ajaxSetup({async: false});
 
+	$('.backend-btn').on('click', 'a', function() {
+		$.post(
+			'/backend_process/',
+			{
+				track_id: track_id
+			}
+		);
+	})
+
 	// display recommendations
 	$('.main-view').on('click', '.fa-play', function() {
 		track_id = $(this).parent().attr('id');
@@ -107,7 +116,7 @@ $(function() {
 					$.post(
 						'/gen_rec/',
 						{
-							track_id: track_id
+							track_id: past_track
 						},
 						function(data) {
 							$('.all-songs').removeClass('full');
@@ -123,12 +132,6 @@ $(function() {
 				},
 				function(data) {
 					listening_duration = track_max_duration = data;
-				}
-			);
-			$.post(
-				'/backend_process/',
-				{
-					track_id: track_id
 				}
 			);
 		}
@@ -193,10 +196,6 @@ $(function() {
 			'/gen_rec/',
 			{
 				track_id: track_id
-			},
-			function(data) {
-				// $('.all-songs').removeClass('full');
-				// $('.mood-rec').removeClass('sr-only').html(data);
 			}
 		);
 		$(this).addClass('sr-only').siblings('.fal.fa-heart').removeClass('sr-only');
