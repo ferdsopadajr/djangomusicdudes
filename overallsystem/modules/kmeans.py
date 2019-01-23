@@ -26,7 +26,8 @@ def read_file(track_id = None, timeconverted = True):
 	file.close()
 
 def compute_ratings(listens_count, listen_durations, fvpl_count, max_duration):
-	pass
+	fvpl = fvpl_count * max_duration
+	return round(((sum(listen_durations) + fvpl) / ((listens_count * max_duration) + fvpl)) * 100)
 
 def compute_cols_mean(pref, fave, pref_cols):
 	if not pref and not fave:

@@ -3,6 +3,7 @@ var track_max_duration;
 var listening_duration;
 var counter;
 var past_track;
+var fav_max;
 
 $(function() {
 	// timer
@@ -81,6 +82,9 @@ $(function() {
 						past_track: past_track,
 						play_duration: track_max_duration-listening_duration,
 						max_duration: track_max_duration
+					},
+					function(data) {
+						$('#'+past_track+' .ratings').text(data);
 					}
 				);
 				if ((track_max_duration-listening_duration) >= (track_max_duration/2)) {
@@ -125,9 +129,19 @@ $(function() {
 		track_id = $(this).parents('.song').attr('id');
 		// add song to favorites
 		$.post(
-			'/add_to_fav/',
+			'/duration/',
 			{
 				track_id: track_id
+			},
+			function(data) {
+				fav_max = data;
+			}
+		);
+		$.post(
+			'/add_to_fav/',
+			{
+				track_id: track_id,
+				max_duration: fav_max
 			}
 		);
 		$.post(
@@ -179,9 +193,19 @@ $(function() {
 		track_id = $(this).parents('.controls-bar').attr('id');
 		// add song to favorites
 		$.post(
-			'/add_to_fav/',
+			'/duration/',
 			{
 				track_id: track_id
+			},
+			function(data) {
+				fav_max = data;
+			}
+		);
+		$.post(
+			'/add_to_fav/',
+			{
+				track_id: track_id,
+				max_duration: fav_max
 			}
 		);
 		$.post(
