@@ -18,7 +18,6 @@ urlpatterns = [
   path('upd_rating/', views.upd_rating),
   path('convert_time/', views.convert_time),
   path('upd_cbl/', views.upd_cbl),
-  path('backend_process/', views.backend_process),
   path('add_to_fav/', views.add_to_fav),
   path('del_to_fav/', views.del_to_fav),
 ]

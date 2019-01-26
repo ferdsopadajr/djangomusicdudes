@@ -1,170 +1,153 @@
-<!DOCTYPE html>
-{% load staticfiles %}
-<html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
-		<link rel="stylesheet" type="text/css" href="{% static 'css/all.css' %}">
-		<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-		<title>MusicDudes</title>
-	</head>
-	<body class="backend">
-		<div class="song-selection">
-			<h4>Song Selection</h4>
-			<div class="selected-song">
-				<h6>Selected Song:</h6>
-				<p>{{ track_id }}</p>
+<div class="backend">
+	<div class="song-selection">
+		<h4>Song Selection</h4>
+		<div class="selected-song">
+			<h6>Selected Song:</h6>
+			<p class="track-id-holder">track id here</p>
+		</div>
+		<div class="selected-song-features">
+			<table class="table">
+				<thead class="thead-dark">
+					<tr>
+						<th scope="col">Acousticness</th>
+						<th scope="col">Danceability</th>
+						<th scope="col">Energy</th>
+						<th scope="col">Instrumentalness</th>
+						<th scope="col">Key</th>
+						<th scope="col">Liveness</th>
+						<th scope="col">Loudness</th>
+						<th scope="col">Speechiness</th>
+						<th scope="col">Tempo</th>
+						<th scope="col">Valence</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Acousticness</td>
+						<td>Danceability</td>
+						<td>Energy</td>
+						<td>Instrumentalness</td>
+						<td>Key</td>
+						<td>Liveness</td>
+						<td>Loudness</td>
+						<td>Speechiness</td>
+						<td>Tempo</td>
+						<td>Valence</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="if-stmt text-center">
+			<h6>If selected track added to user's preference <span>GET RECOMMENDATIONS.</span></h6>
+		</div>
+		<div class="user-song-preferences">
+			<h4>User's Song Preferences</h4>
+			<table class="table">
+				<thead class="thead-dark">
+					<tr>
+						<th scope="col">Acousticness</th>
+						<th scope="col">Danceability</th>
+						<th scope="col">Energy</th>
+						<th scope="col">Instrumentalness</th>
+						<th scope="col">Key</th>
+						<th scope="col">Liveness</th>
+						<th scope="col">Loudness</th>
+						<th scope="col">Speechiness</th>
+						<th scope="col">Tempo</th>
+						<th scope="col">Valence</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Acousticness</td>
+						<td>Danceability</td>
+						<td>Energy</td>
+						<td>Instrumentalness</td>
+						<td>Key</td>
+						<td>Liveness</td>
+						<td>Loudness</td>
+						<td>Speechiness</td>
+						<td>Tempo</td>
+						<td>Valence</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="computed-user-pref">
+			<h4>Computed User's Song Preferences Mean</h4>
+			<table class="table">
+				<thead class="thead-dark">
+					<tr>
+						<th scope="col">Acousticness</th>
+						<th scope="col">Danceability</th>
+						<th scope="col">Energy</th>
+						<th scope="col">Instrumentalness</th>
+						<th scope="col">Key</th>
+						<th scope="col">Liveness</th>
+						<th scope="col">Loudness</th>
+						<th scope="col">Speechiness</th>
+						<th scope="col">Tempo</th>
+						<th scope="col">Valence</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Acousticness</td>
+						<td>Danceability</td>
+						<td>Energy</td>
+						<td>Instrumentalness</td>
+						<td>Key</td>
+						<td>Liveness</td>
+						<td>Loudness</td>
+						<td>Speechiness</td>
+						<td>Tempo</td>
+						<td>Valence</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="mood-analysis">
+			<div class="mood-head">
+				<h4>Mood Analysis</h4>
+				<p>(Thayer's Mood Model as the basis)</p>
 			</div>
-			<div class="selected-song-features">
-				<table class="table">
-					<thead class="thead-dark">
-						<tr>
-							<th scope="col">Acousticness</th>
-							<th scope="col">Danceability</th>
-							<th scope="col">Energy</th>
-							<th scope="col">Instrumentalness</th>
-							<th scope="col">Key</th>
-							<th scope="col">Liveness</th>
-							<th scope="col">Loudness</th>
-							<th scope="col">Speechiness</th>
-							<th scope="col">Tempo</th>
-							<th scope="col">Valence</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>Acousticness</td>
-							<td>Danceability</td>
-							<td>Energy</td>
-							<td>Instrumentalness</td>
-							<td>Key</td>
-							<td>Liveness</td>
-							<td>Loudness</td>
-							<td>Speechiness</td>
-							<td>Tempo</td>
-							<td>Valence</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<div class="if-stmt text-center">
-				<h6>If selected track added to user's preference <span>GET RECOMMENDATIONS.</span></h6>
-			</div>
-			<div class="user-song-preferences">
-				<h4>User's Song Preferences</h4>
-				<table class="table">
-					<thead class="thead-dark">
-						<tr>
-							<th scope="col">Acousticness</th>
-							<th scope="col">Danceability</th>
-							<th scope="col">Energy</th>
-							<th scope="col">Instrumentalness</th>
-							<th scope="col">Key</th>
-							<th scope="col">Liveness</th>
-							<th scope="col">Loudness</th>
-							<th scope="col">Speechiness</th>
-							<th scope="col">Tempo</th>
-							<th scope="col">Valence</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>Acousticness</td>
-							<td>Danceability</td>
-							<td>Energy</td>
-							<td>Instrumentalness</td>
-							<td>Key</td>
-							<td>Liveness</td>
-							<td>Loudness</td>
-							<td>Speechiness</td>
-							<td>Tempo</td>
-							<td>Valence</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<div class="computed-user-pref">
-				<h4>Computed User's Song Preferences Mean</h4>
-				<table class="table">
-					<thead class="thead-dark">
-						<tr>
-							<th scope="col">Acousticness</th>
-							<th scope="col">Danceability</th>
-							<th scope="col">Energy</th>
-							<th scope="col">Instrumentalness</th>
-							<th scope="col">Key</th>
-							<th scope="col">Liveness</th>
-							<th scope="col">Loudness</th>
-							<th scope="col">Speechiness</th>
-							<th scope="col">Tempo</th>
-							<th scope="col">Valence</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>Acousticness</td>
-							<td>Danceability</td>
-							<td>Energy</td>
-							<td>Instrumentalness</td>
-							<td>Key</td>
-							<td>Liveness</td>
-							<td>Loudness</td>
-							<td>Speechiness</td>
-							<td>Tempo</td>
-							<td>Valence</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<div class="mood-analysis">
-				<div class="mood-head">
-					<h4>Mood Analysis</h4>
-					<p>(Thayer's Mood Model as the basis)</p>
-				</div>
-				<div class="determined-mood">
-					<h6>Determined Mood:</h6>
-					<p>mood here</p>
-				</div>
-			</div>
-			<div class="recommendations-disp">
-				<h4>Recommended Songs</h4>
-				<table class="table">
-					<thead class="thead-dark">
-						<tr>
-							<th scope="col">Acousticness</th>
-							<th scope="col">Danceability</th>
-							<th scope="col">Energy</th>
-							<th scope="col">Instrumentalness</th>
-							<th scope="col">Key</th>
-							<th scope="col">Liveness</th>
-							<th scope="col">Loudness</th>
-							<th scope="col">Speechiness</th>
-							<th scope="col">Tempo</th>
-							<th scope="col">Valence</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>Acousticness</td>
-							<td>Danceability</td>
-							<td>Energy</td>
-							<td>Instrumentalness</td>
-							<td>Key</td>
-							<td>Liveness</td>
-							<td>Loudness</td>
-							<td>Speechiness</td>
-							<td>Tempo</td>
-							<td>Valence</td>
-						</tr>
-					</tbody>
-				</table>
+			<div class="determined-mood">
+				<h6>Determined Mood:</h6>
+				<p>mood here</p>
 			</div>
 		</div>
-		<script type="text/javascript" src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-		<script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
-		<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
-		<script type="text/javascript" src="{% static 'js/custom.js' %}"></script>
-	</body>
-</html>
+		<div class="recommendations-disp">
+			<h4>Recommended Songs</h4>
+			<table class="table">
+				<thead class="thead-dark">
+					<tr>
+						<th scope="col">Acousticness</th>
+						<th scope="col">Danceability</th>
+						<th scope="col">Energy</th>
+						<th scope="col">Instrumentalness</th>
+						<th scope="col">Key</th>
+						<th scope="col">Liveness</th>
+						<th scope="col">Loudness</th>
+						<th scope="col">Speechiness</th>
+						<th scope="col">Tempo</th>
+						<th scope="col">Valence</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Acousticness</td>
+						<td>Danceability</td>
+						<td>Energy</td>
+						<td>Instrumentalness</td>
+						<td>Key</td>
+						<td>Liveness</td>
+						<td>Loudness</td>
+						<td>Speechiness</td>
+						<td>Tempo</td>
+						<td>Valence</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

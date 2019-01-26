@@ -671,7 +671,7 @@ a:hover {
 .backend .song-selection {
   overflow-y: scroll;
   position: fixed;
-  width: 100%;
+  width: 60%;
   height: 100%;
   background: #fff;
   color: black;

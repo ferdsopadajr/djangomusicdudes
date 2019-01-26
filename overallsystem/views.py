@@ -60,10 +60,6 @@ def gen_rec(request):
 	return render(request, 'overallsystem/recommendations.html', {'rec_songs': rec_songs, 'mood': mood, 'profile': profile})
 
 @csrf_exempt
-def backend_process(request):
-	return render(request, 'overallsystem/backend_process.html', {'track_id': request.POST['track_id']})
-
-@csrf_exempt
 def add_to_pref(request):
 	UserListens(user=Profiles.objects.get(user=request.user), track=Tracks.objects.get(track=request.POST['past_track']), listen_duration=request.POST['play_duration']).save()
 	# if user play duration >= 50% of max duration add track to preference
@@ -86,11 +82,16 @@ def upd_rating(request):
 	# 								(sum(listenduration)+(fvpl*maxdurationoftrack))
 	#	rating = --------------------------------------------------------------- * 100
 	# 					(sum(listens)*maxdurationoftrack)+(fvpl*maxdurationoftrack)
-	if request.POST['past_track']:
+	if 'past_track' in request.POST:
 		rating = compute_ratings(Tracks.objects.get(track=request.POST['past_track']).listens, [obj.listen_duration for obj in UserListens.objects.filter(track=Tracks.objects.get(track=request.POST['past_track']))], UserFaves.objects.filter(track=Tracks.objects.get(track=request.POST['past_track'])).count(), int(request.POST['max_duration']))
 		print(rating)
 		Tracks(track=request.POST['past_track'], listens=Tracks.objects.get(track=request.POST['past_track']).listens, ratings=rating).save()
-	return HttpResponse(str(Tracks.objects.get(track=request.POST['past_track']).ratings)+'%')
+		return HttpResponse(str(Tracks.objects.get(track=request.POST['past_track']).ratings)+'%')
+	elif 'track_id' in request.POST:
+		rating = compute_ratings(Tracks.objects.get(track=request.POST['track_id']).listens, [obj.listen_duration for obj in UserListens.objects.filter(track=Tracks.objects.get(track=request.POST['track_id']))], UserFaves.objects.filter(track=Tracks.objects.get(track=request.POST['track_id'])).count(), int(request.POST['max_duration']))
+		print(rating)
+		Tracks(track=request.POST['track_id'], listens=Tracks.objects.get(track=request.POST['track_id']).listens, ratings=rating).save()
+		return HttpResponse(str(Tracks.objects.get(track=request.POST['track_id']).ratings)+'%')
 
 @csrf_exempt
 def duration(request):

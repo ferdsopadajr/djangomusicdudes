@@ -71,7 +71,6 @@ def plot_points():
 	
 	for data, color, group in zip(data, colors, groups):
 		x, y = data
-		print(x, y)
 		# plt.scatter(x, y, s = 20, edgecolors='none', c = color, label = group)
 
 	# plt.style.use('seaborn-whitegrid')
@@ -202,6 +201,7 @@ def cluster_points(**kwargs):
 					for each data_point.cluster = nearest centroid, using Euclidean Distance
 					new centroid = mean of all cluster.data_points
 	'''
+	print(kwargs['preference'])
 
 	# Get mood quadrant to start clustering
 	quadrant = determine_mood(kwargs['preference'])
@@ -212,6 +212,7 @@ def cluster_points(**kwargs):
 	# Run while loop until songs_to_recommend != quota
 	songs_to_recommend = []
 	start = time.time()
+	print('Songs to recommend:')
 	while len(songs_to_recommend) != 10:
 		
 		# Start K-means clustering
@@ -224,6 +225,7 @@ def cluster_points(**kwargs):
 					if len(songs_to_recommend) != 10:
 						if track not in songs_to_recommend:
 							songs_to_recommend.append(track)
+							print(track)
 					else:
 						break
 			else:
@@ -258,5 +260,7 @@ def cluster_points(**kwargs):
 	for item in sorted_rec:
 		item[1] = round(mean(x for x in item[1]), 3)
 
+	for track_id in [item[0] for item in sorted(sorted_rec, key = lambda item : item[1])]:
+		print(read_file(track_id), '\n')
 	# Return sorted recommendations
 	return [read_file(track_id) for track_id in [item[0] for item in sorted(sorted_rec, key = lambda item : item[1])]]

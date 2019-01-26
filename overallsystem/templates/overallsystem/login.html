@@ -1,70 +1,72 @@
 {% extends 'overallsystem/layout.html' %}
-{% block auth %}
-	<div class="container login">
-		<div class="row justify-content-center">
-			<div class="col-4 login-head">
-				<h1 class="text-center md-head">Music<span>Dudes</span></h1>
-				{% if request.path == '/login/' %}
-					<h5 class="text-center">Log in to your account</h5>
-					{% if messages %}
-						{% for message in messages %}
-							<div class="alert alert-{{ message.tags }}">
-								{{ message }}
+{% block mainview %}
+	{% block auth %}
+		<div class="container login">
+			<div class="row justify-content-center">
+				<div class="col-4 login-head">
+					<h1 class="text-center md-head">Music<span>Dudes</span></h1>
+					{% if request.path == '/login/' %}
+						<h5 class="text-center">Log in to your account</h5>
+						{% if messages %}
+							{% for message in messages %}
+								<div class="alert alert-{{ message.tags }}">
+									{{ message }}
+								</div>
+							{% endfor %}
+						{% endif %}
+						<form class="login-form" method="post" action="/login/">
+							{% csrf_token %}
+							<div class="form-group">
+								<label for="username">Username</label>
+								<input class="form-control" type="text" name="username" placeholder="Username">
 							</div>
-						{% endfor %}
+							<div class="form-group">
+								<label for="password">Password</label>
+								<input class="form-control" type="password" name="password" placeholder="Password">
+							</div>
+							{% if form.errors %}
+		            <small style="color: red">Your username and password didn't match. Please try again.</small>
+		          {% endif %}
+							<button type="submit" class="btn btn-primary btn-block"> Log in</button>
+						</form>
+						<div class="pt-3 text-center">
+							<small class="text-muted">No account yet?
+								<a class="ml-1" href="/signup/">Sign up</a>
+							</small>
+						</div>
+					{% elif request.path == '/signup/' %}
+						<h5 class="text-center">Sign up for an account</h5>
+						<form class="login-form" method="post" action="/signup/">
+							{% csrf_token %}
+							<div class="form-group">
+								<label for="username">Username</label>
+								{{ form.username }}
+							</div>
+							{% for error in form.username.errors %}
+								<small style="color: red">{{ error }}</small>
+							{% endfor%}
+							<div class="form-group">
+								<label for="password">Password</label>
+								{{ form.password1 }}
+							</div>
+							<div class="form-group">
+								<label for="re_password">Confirm Password</label>
+								{{ form.password2 }}
+							</div>
+							{% for error in form.password2.errors %}
+								<small style="color: red">{{ error }}</small>
+								<br>
+							{% endfor%}
+							<button type="submit" class="btn btn-primary btn-block"> Sign up</button>
+						</form>
+						<div class="pt-3 text-center">
+							<small class="text-muted">Already have an account?
+								<a class="ml-1" href="/login/">Log in</a>
+							</small>
+						</div>
 					{% endif %}
-					<form class="login-form" method="post" action="/login/">
-						{% csrf_token %}
-						<div class="form-group">
-							<label for="username">Username</label>
-							<input class="form-control" type="text" name="username" placeholder="Username">
-						</div>
-						<div class="form-group">
-							<label for="password">Password</label>
-							<input class="form-control" type="password" name="password" placeholder="Password">
-						</div>
-						{% if form.errors %}
-	            <small style="color: red">Your username and password didn't match. Please try again.</small>
-	          {% endif %}
-						<button type="submit" class="btn btn-primary btn-block"> Log in</button>
-					</form>
-					<div class="pt-3 text-center">
-						<small class="text-muted">No account yet?
-							<a class="ml-1" href="/signup/">Sign up</a>
-						</small>
-					</div>
-				{% elif request.path == '/signup/' %}
-					<h5 class="text-center">Sign up for an account</h5>
-					<form class="login-form" method="post" action="/signup/">
-						{% csrf_token %}
-						<div class="form-group">
-							<label for="username">Username</label>
-							{{ form.username }}
-						</div>
-						{% for error in form.username.errors %}
-							<small style="color: red">{{ error }}</small>
-						{% endfor%}
-						<div class="form-group">
-							<label for="password">Password</label>
-							{{ form.password1 }}
-						</div>
-						<div class="form-group">
-							<label for="re_password">Confirm Password</label>
-							{{ form.password2 }}
-						</div>
-						{% for error in form.password2.errors %}
-							<small style="color: red">{{ error }}</small>
-							<br>
-						{% endfor%}
-						<button type="submit" class="btn btn-primary btn-block"> Sign up</button>
-					</form>
-					<div class="pt-3 text-center">
-						<small class="text-muted">Already have an account?
-							<a class="ml-1" href="/login/">Log in</a>
-						</small>
-					</div>
-				{% endif %}
+				</div>
 			</div>
 		</div>
-	</div>
+	{% endblock %}
 {% endblock %}
