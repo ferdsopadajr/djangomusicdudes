@@ -4,6 +4,7 @@ var listening_duration;
 var counter;
 var past_track = null;
 var fav_max;
+var gen_rec = true;
 
 $(function() {
 	// timer
@@ -158,7 +159,7 @@ $(function() {
 			'/upd_rating/',
 			{
 				track_id: track_id,
-				max_duration: track_max_duration
+				max_duration: fav_max
 			},
 			function(data) {
 				$('#'+track_id+' .ratings').text(data);
@@ -188,6 +189,7 @@ $(function() {
 			},
 			function(data) {
 				if (data == 'False') {
+					fav_max = 0;
 					$('.all-songs').addClass('full');
 					$('.mood-rec').addClass('sr-only');
 				}
@@ -197,22 +199,27 @@ $(function() {
 			'/upd_rating/',
 			{
 				track_id: track_id,
-				max_duration: track_max_duration
+				max_duration: fav_max
 			},
 			function(data) {
+				if (data == '0%') {
+					gen_rec = false;
+				}
 				$('#'+track_id+' .ratings').text(data);
 			}
 		);
-		$.post(
-			'/gen_rec/',
-			{
-				track_id: track_id
-			},
-			function(data) {
-				// $('.all-songs').removeClass('full');
-				// $('.mood-rec').removeClass('sr-only').html(data);
-			}
-		);
+		if (gen_rec == true) {
+			$.post(
+				'/gen_rec/',
+				{
+					track_id: track_id
+				},
+				function(data) {
+					// $('.all-songs').removeClass('full');
+					// $('.mood-rec').removeClass('sr-only').html(data);
+				}
+			);
+		}
 		$(this).addClass('sr-only').siblings('.fal.fa-heart').removeClass('sr-only');
 		if ($('.controls-bar').attr('id') == track_id) {
 			$('.controls-bar-left .fas.fa-heart').addClass('sr-only').siblings('.fal.fa-heart').removeClass('sr-only');
@@ -242,7 +249,7 @@ $(function() {
 			'/upd_rating/',
 			{
 				track_id: track_id,
-				max_duration: track_max_duration
+				max_duration: fav_max
 			},
 			function(data) {
 				$('#'+track_id+' .ratings').text(data);
@@ -270,6 +277,7 @@ $(function() {
 			},
 			function(data) {
 				if (data == 'False') {
+					fav_max = 0;
 					$('.all-songs').addClass('full');
 					$('.mood-rec').addClass('sr-only');
 				}
@@ -279,22 +287,27 @@ $(function() {
 			'/upd_rating/',
 			{
 				track_id: track_id,
-				max_duration: track_max_duration
+				max_duration: fav_max
 			},
 			function(data) {
+				if (data == '0%') {
+					gen_rec = false;
+				}
 				$('#'+track_id+' .ratings').text(data);
 			}
 		);
-		$.post(
-			'/gen_rec/',
-			{
-				track_id: track_id
-			},
-			function(data) {
-				// $('.all-songs').removeClass('full');
-				// $('.mood-rec').removeClass('sr-only').html(data);
-			}
-		);
+		if (gen_rec == true) {
+			$.post(
+				'/gen_rec/',
+				{
+					track_id: track_id
+				},
+				function(data) {
+					// $('.all-songs').removeClass('full');
+					// $('.mood-rec').removeClass('sr-only').html(data);
+				}
+			);
+		}
 		$(this).addClass('sr-only').siblings('.fal.fa-heart').removeClass('sr-only');
 		$('.main-view').find('div#'+track_id).find('.fas.fa-heart').addClass('sr-only').siblings('.fal.fa-heart').removeClass('sr-only');
 	});
