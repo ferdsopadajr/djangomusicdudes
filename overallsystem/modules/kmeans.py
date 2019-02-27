@@ -85,12 +85,12 @@ def plot_points():
 	# plt.show()
 
 def calc_dist(tracks, query):
-	distance = {key:[] for key in query if key not in ['track_name', 'artists', 'id', 'genre', 'duration_ms', 'mode']}
+	distance = {key:[] for key in query if key not in ['quadrant', 'track_name', 'artists', 'id', 'genre', 'duration_ms', 'mode']}
 
 	for track_id in tracks:
 		feats = read_file(track_id)
 		for i in feats:
-			if i not in ['track_name', 'artists', 'id', 'genre', 'duration_ms', 'mode']:
+			if i not in ['quadrant', 'track_name', 'artists', 'id', 'genre', 'duration_ms', 'mode']:
 				distance[i].append([track_id, np.linalg.norm(float(query[i]) - float(feats[i]))])
 	return distance
 

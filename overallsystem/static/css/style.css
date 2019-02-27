@@ -30,7 +30,7 @@
   width: 100%;
 }
 
-.controls-bar .controls-bar-left-center .controls-bar-left .now-playing .track-info, .controls-bar .controls-bar-left-center .controls-bar-left .now-playing .track-info .track-info-name, .controls-bar .controls-bar-left-center .controls-bar-left .now-playing .track-info .track-info-artists, .main-view .all-songs .songs-container .song .song-info .song-info-name, .main-view .all-songs .songs-container .song .song-info .song-info-artists, .main-view .mood-rec .rec .rec-container .song .song-info .song-info-name, .main-view .mood-rec .rec .rec-container .song .song-info .song-info-artists {
+.sidebar-nav .new-playlist, .controls-bar .controls-bar-left-center .controls-bar-left .now-playing .track-info, .controls-bar .controls-bar-left-center .controls-bar-left .now-playing .track-info .track-info-name, .controls-bar .controls-bar-left-center .controls-bar-left .now-playing .track-info .track-info-artists, .main-view .all-songs .songs-container .song .song-info .song-info-name, .main-view .all-songs .songs-container .song .song-info .song-info-artists, .main-view .mood-rec .rec .rec-container .song .song-info .song-info-name, .main-view .mood-rec .rec .rec-container .song .song-info .song-info-artists {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -49,7 +49,6 @@
   }
 }
 body {
-  background: linear-gradient(to right bottom, #36273c, #65521c);
   color: #cac0c9;
   font-size: 14px;
   letter-spacing: .015em;
@@ -74,12 +73,17 @@ body {
   /* create playlist */
 }
 #sidebar-wrapper .cr_pl {
-  height: 50px;
-  line-height: 50px;
+  height: 56px;
+  line-height: 56px;
   border-top: 1px solid #47384d;
+  margin: 0 24px;
 }
-#sidebar-wrapper .cr_pl a:hover {
+#sidebar-wrapper .cr_pl a {
   color: #fff;
+  padding: 0 5px;
+}
+#sidebar-wrapper .cr_pl a img {
+  padding-right: 10px;
 }
 
 a {
@@ -110,9 +114,6 @@ a:hover {
 .sidebar-nav .sidebar-brand a span {
   color: #2b5b84;
 }
-.sidebar-nav .active a i {
-  color: #2b5b84;
-}
 .sidebar-nav .active a, .sidebar-nav .active a:active, .sidebar-nav .active a:focus {
   color: #fff !important;
 }
@@ -124,6 +125,10 @@ a:hover {
   top: 5px;
   bottom: 5px;
   left: 0;
+}
+.sidebar-nav .playlists-title {
+  max-height: 359px;
+  overflow: auto;
 }
 .sidebar-nav li {
   position: relative;
@@ -140,6 +145,27 @@ a:hover {
   left: 0;
 }
 .sidebar-nav li:not(:first-child) a:hover {
+  color: #fff;
+}
+.sidebar-nav li:not(:first-child) a img {
+  padding-right: 10px;
+}
+.sidebar-nav li:nth-child(3) {
+  display: flex;
+}
+.sidebar-nav li:nth-child(3) #create-playlist img {
+  width: 30px;
+  height: 30px;
+}
+.sidebar-nav .new-playlist {
+  padding: 0 24px;
+  height: 28px;
+  line-height: 28px;
+}
+.sidebar-nav .new-playlist img {
+  padding-right: 10px;
+}
+.sidebar-nav .new-playlist:hover {
   color: #fff;
 }
 
@@ -424,6 +450,7 @@ a:hover {
   align-items: center;
 }
 .controls-bar .controls-bar-right .extra-controls .volume-bar .progress {
+  overflow: visible;
   background: #544e59;
   height: 4px;
   width: 100%;
@@ -431,24 +458,82 @@ a:hover {
 .controls-bar .controls-bar-right .extra-controls .volume-bar .progress .progress-bar {
   background: #cac0c9;
   height: 4px;
+  width: 100%;
   border-radius: .25em;
+}
+.controls-bar .controls-bar-right .extra-controls .volume-bar .progress .middle-align {
+  top: 50%;
+}
+.controls-bar .controls-bar-right .extra-controls .volume-bar .progress .progress-bar-slider {
+  transition-property: transform,-webkit-transform;
+  background-color: #fff;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  margin-top: -4px;
+  z-index: 100;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+  transform: scale(0);
+}
+.controls-bar .controls-bar-right .extra-controls .volume-bar .progress-active .progress-bar-slider {
+  transition-duration: .1s;
+  transition-timing-function: cubic-bezier(0.3, 0, 0, 1);
+  transform: scale(1);
+}
+.controls-bar .controls-bar-right .extra-controls .volume-bar .progress-active .progress-bar {
+  background: #fed667;
+}
+.controls-bar .controls-bar-right .extra-controls .volume-bar #slider {
+  width: 100%;
+  background: #544e59;
+  height: 4px;
+  border: none;
+}
+.controls-bar .controls-bar-right .extra-controls .volume-bar #slider .ui-slider-handle {
+  display: none;
+}
+.controls-bar .controls-bar-right .extra-controls .volume-bar #slider .ui-widget-header {
+  background: #cac0c9;
+}
+.controls-bar .controls-bar-right .extra-controls .volume-bar #slider:hover .ui-slider-range-min {
+  height: 4px;
+  position: absolute;
+  background: #fed667;
+  border-radius: .25em;
+}
+.controls-bar .controls-bar-right .extra-controls .volume-bar #slider:hover .ui-slider-handle {
+  display: initial;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  position: absolute;
+  margin-left: -6px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+  outline: none;
+  border: none;
+}
+.controls-bar .controls-bar-right .extra-controls .volume-bar #slider .ui-state-active, .controls-bar .controls-bar-right .extra-controls .volume-bar #slider .ui-state-hover {
+  border: none;
 }
 
 /* main view */
 .main-view {
   position: absolute;
   display: flex;
-  background: inherit;
+  background: linear-gradient(to right bottom, #36273c, #65521c) no-repeat;
   height: 79.8%;
   width: 100%;
   user-select: none;
+  min-width: 963.14px;
   top: 50px;
   z-index: -2;
-  padding-left: 215px;
 }
 .main-view .account {
+  padding-left: 215px;
   color: #fed667;
-  width: 100%;
+  width: 100vw;
   height: 100%;
   display: flex;
   align-items: center;
@@ -459,10 +544,13 @@ a:hover {
   font-size: 72px;
 }
 .main-view .account a {
+  text-align: center;
   color: #cac0c9;
-  padding: 3px 70px;
+  padding: 3px 0;
+  width: 220px;
   border: 3px solid #cac0c9;
   border-radius: 20px;
+  margin: 5px 0;
 }
 .main-view .account a:hover {
   color: #fff;
@@ -475,9 +563,9 @@ a:hover {
   width: 100% !important;
 }
 .main-view .all-songs {
-  background: linear-gradient(#49384a, #947696, #49384a);
-  width: 65%;
+  width: 748.14px;
   min-width: 748.14px;
+  margin-left: 215px;
 }
 .main-view .all-songs .songs-container {
   height: 504.61px;
@@ -555,7 +643,7 @@ a:hover {
   background: rgba(67, 48, 71, 0.5);
 }
 .main-view .mood-rec {
-  width: 35%;
+  width: 402.84px;
   min-width: 402.84px;
 }
 .main-view .mood-rec .current-mood {

@@ -83,7 +83,6 @@ $controls: #402f4c;
 	}
 }
 body {
-	background: linear-gradient(to right bottom, #36273c, #65521c);
 	color: $secondary;
 	font-size: 14px;
 	letter-spacing: .015em;
@@ -101,13 +100,16 @@ body {
 	padding-bottom: 90px;
 	/* create playlist */
 	.cr_pl {
-		height: 50px;
-		line-height: 50px;
+		height: 56px;
+		line-height: 56px;
 		border-top: 1px solid #47384d;
+		margin: 0 24px;
 		a {
 			@extend %align;
-			&:hover {
-				color: $primary;
+			color: $primary;
+			padding: 0 5px;
+			img {
+				padding-right: 10px;
 			}
 		}
 	}
@@ -141,9 +143,6 @@ a {
 	}
 	.active {
 		a {
-			i {
-				color: $brand-sec;
-			}
 			&, &:active, &:focus {
 				color: $primary !important;
 			}
@@ -151,6 +150,10 @@ a {
 				@include left-bdr($actv-bdr !important);
 			}
 		}
+	}
+	.playlists-title {
+		max-height: 359px;
+		overflow: auto;
 	}
 	li {
 		position: relative;
@@ -165,7 +168,29 @@ a {
 				&:hover {
 					color: $primary;
 				}
+				img {
+					padding-right: 10px;
+				}
 			}
+		}
+		&:nth-child(3) {
+			display: flex;
+			#create-playlist img {
+				width: 30px;
+				height: 30px;
+			}
+		}
+	}
+	.new-playlist {
+		@extend %ellipsis;
+		padding: 0 24px;
+		height: 28px;
+		line-height: 28px;
+		img {
+			padding-right: 10px;
+		}
+		&:hover {
+			color: $primary;
 		}
 	}
 }
@@ -409,13 +434,75 @@ a {
 				display: flex;
 				align-items: center;
 				.progress {
+					overflow: visible;
 					background: #544e59;
 					height: 4px;
 					width: 100%;
 					.progress-bar {
 						background: $secondary;
 						height: 4px;
+						width: 100%;
 						border-radius: .25em;
+					}
+					.middle-align {
+				    top: 50%;
+					}
+					.progress-bar-slider {
+				    transition-property: transform,-webkit-transform;
+				    background-color: #fff;
+				    border-radius: 50%;
+				    width: 12px;
+				    height: 12px;
+				    margin-left: -6px;
+				    margin-top: -4px;
+				    z-index: 100;
+				    box-shadow: 0 2px 4px 0 rgba(0,0,0,.5);
+				    transform: scale(0);
+					}
+				}
+				.progress-active {
+					.progress-bar-slider {
+				    transition-duration: .1s;
+				    transition-timing-function: cubic-bezier(.3,0,0,1);
+				    transform: scale(1);
+				  }
+				  .progress-bar {
+				  	background: $actv-bdr;
+				  }
+				}
+				#slider {
+					width: 100%;
+					background: #544e59;
+					height: 4px;
+					border: none;
+					.ui-slider-handle {
+						display: none;
+					}
+					.ui-widget-header {
+						background: #cac0c9;
+					}
+					&:hover{
+						.ui-slider-range-min {
+							height: 4px;
+							position: absolute;
+							background: $actv-bdr;
+							border-radius: .25em;
+						}
+						.ui-slider-handle {
+							display: initial;
+							width: 12px;
+							height: 12px;
+							border-radius: 50%;
+							background: $primary;
+							position: absolute;
+							margin-left: -6px;
+							box-shadow: 0 2px 4px 0 rgba(0,0,0,.5);
+					    outline: none;
+					    border: none;
+						}
+					}
+					.ui-state-active, .ui-state-hover {
+						border: none;
 					}
 				}
 			}
@@ -424,13 +511,14 @@ a {
 }
 /* main view */
 .main-view {
-	@include property(absolute, flex, inherit, 79.8%, 100%);
+	@include property(absolute, flex, linear-gradient(to right bottom, #36273c, #65521c) no-repeat, 79.8%, 100%);
+	min-width: 963.14px;
 	top: 50px;
 	z-index: -2;
-	padding-left: 215px;
 	.account {
+		padding-left: 215px;
 		color: $actv-bdr;
-		width: 100%;
+		width: 100vw;
 		height: 100%;
 		display: flex;
 		align-items: center;
@@ -440,10 +528,13 @@ a {
 			font-size: 72px;
 		}
 		a {
+			text-align: center;
 			color: $secondary;
-			padding: 3px 70px;
+			padding: 3px 0;
+			width: 220px;
 			border: 3px solid $secondary;
 			border-radius: 20px;
+			margin: 5px 0;
 			&:hover {
 				color: $primary;
 				border-color: $primary;
@@ -457,9 +548,9 @@ a {
 		width: 100% !important;
 	}
 	.all-songs {
-		background: linear-gradient(#49384a, #947696, #49384a);
-		width: 65%;
+		width: 748.14px;
 		min-width: 748.14px;
+		margin-left: 215px;
 		.all-songs-title {
 			@extend %songs-header;
 		}
@@ -544,7 +635,7 @@ a {
 		}
 	}
 	.mood-rec {
-		width: 35%;
+		width: 402.84px;
 		min-width: 402.84px;
 		.current-mood {
 			background: #614e62;

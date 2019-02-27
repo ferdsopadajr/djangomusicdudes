@@ -7,17 +7,22 @@
 			<a href="/">Music<span>Dudes</span></a>
 		</li>
 		<li class="active">
-			<a id="#browse"><i class="fas fa-home"></i>Browse</a>
+			<a id="browse"><img src="/static/icons/home.svg">Browse</a>
 		</li>
 		<li>
-			<a id="#playlists"><i class="fas fa-folders"></i>Playlists</a>
+			<a id="playlists"><img src="/static/icons/playlist.svg">Playlists</a>
+			<a id="create-playlist" class="sr-only" title="Create Playlist"><img src="/static/icons/create-playlist.svg"></a>
+		</li>
+		<div class="playlists-title"></div>
+		<li>
+			<a id="favorites"><img src="/static/icons/favorites.svg">Favorites</a>
 		</li>
 		<li>
-			<a id="#favorites"><i class="fas fa-heart"></i>Favorites</a>
+			<a id="spotify">Spotify API</a>
 		</li>
 	</ul>
 	<div class="cr_pl">
-		<a href="#create_playlist"><i class="far fa-plus-circle"></i>Create Playlist</a>
+		<a id="account"><img src="/static/icons/user.svg">{{ user.username }}</a>
 	</div>
 </div>
 <!-- Top Bar -->
@@ -28,12 +33,6 @@
 			<div class="input-group-append">
 				<i class="input-group-text fal fa-search"></i>
 			</div>
-		</div>
-	</div>
-	<div class="btn-group">
-		<button class="btn dropdown-toggle fal fa-user-circle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ user.username }}</button>
-		<div class="dropdown-menu dropdown-menu-right">
-			<a id="account" class="dropdown-item">Account</a>
 		</div>
 	</div>
 </div>
@@ -65,9 +64,11 @@
 			<button class="fal fa-bars" title="Queue"></button>
 			<div class="volume-bar">
 				<button class="fal fa-volume" aria-label="Mute"></button>
-				<div class="progress">
-					<div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-				</div>
+				<!-- <div class="progress progress-active">
+					<div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+					<div class="middle-align progress-bar-slider" style="left: 100%;"></div>
+				</div> -->
+				<div id="slider"></div>
 			</div>
 		</div>
 	</div>

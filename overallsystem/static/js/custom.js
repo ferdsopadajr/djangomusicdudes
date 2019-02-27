@@ -5,8 +5,13 @@ var counter;
 var past_track = null;
 var fav_max;
 var gen_rec = true;
+var auth_uri;
+var auth_code;
+var access_token;
+var refresh_token;
 
 $(function() {
+	$.ajaxSetup({async: false, data: {csrfmiddlewaretoken:window.CSRF_TOKEN}});
 	// timer
 	function countdown() {
 		var reducer = 1000;
@@ -31,12 +36,32 @@ $(function() {
 			}
 		);
 	}
+	//slider
+	function setVolume(volume) {
+		$.post(
+			'/set_volume/',
+			{
+				access_token: access_token,
+				volume: volume
+			}
+		);
+	}
+	$('#slider').slider({
+		min: 0,
+		max: 100,
+		value: 0,
+		range: 'min',
+		slide: function(event, ui) {
+			setVolume(ui.value);
+		}
+	});
 	// sidebar link
 	$('.sidebar-nav li:not(:first-child)').on('click', 'a', function() {
 		$(this).parent().addClass('active').siblings().removeClass('active').find('i').css('color','');
 		$(this).find('i').css('color','#2b5b84');
+		$('#account').css('color', '#fff');
 
-		if ($(this).attr('id') == '#favorites') {
+		if ($(this).attr('id') == 'favorites') {
 			// display favorites
 			$.post(
 				'/favorites/',
@@ -44,17 +69,44 @@ $(function() {
 					$('.all-songs').html(data);
 				}
 			);
-		} else if ($(this).attr('id') == '#browse') {
+		} else if ($(this).attr('id') == 'browse') {
 			$.post(
 				'/browse/',
 				function(data) {
-					$('.songs-container').html(data);
+					$('.main-view').html(data);
+				}
+			);
+		} else if ($(this).attr('id') == 'spotify') {
+			$.post(
+				'/get_auth_code/',
+				function(data) {
+					auth_uri = data;
+					window.open(auth_uri, '_blank');
+				}
+			);
+			do {
+				auth_code = prompt('Please enter authorization code');
+			}while(auth_code == null || auth_code == '');
+			$.post(
+				'/get_token/',
+				{
+					auth_code: auth_code
+				},
+				function(data) {
+					console.log(data);
+					var response = JSON.parse(data);
+					access_token = response.access_token;
+					refresh_token = response.refresh_token;
 				}
 			);
 		}
 	});
-
-	$.ajaxSetup({async: false});
+	$('.sidebar-nav').on('mouseover mouseout', 'li:nth-child(3)', function() {
+		$(this).find('#create-playlist').toggleClass('sr-only');
+	});
+	$('li:nth-child(3)').on('click', '#create-playlist', function() {
+		$('<div class="new-playlist"><img src="/static/icons/song-note.svg">This is a New Playlist</div>').appendTo('.playlists-title');
+	});
 
 	// display recommendations
 	$('.main-view').on('click', '.fa-play', function() {
@@ -126,6 +178,23 @@ $(function() {
 					listening_duration = track_max_duration = data;
 				}
 			);
+			const player = new Spotify.Player({
+				name: 'MusicDudes Player',
+				getOAuthToken: callback => { callback(access_token); }
+			});
+			player.connect().then(success => {
+				if (success) {
+					console.log('The Web Playback SDK successfully connected to Spotify!');
+				}
+			});
+			$.post(
+				'/play_song/',
+				{
+					access_token: access_token,
+					refresh_token: refresh_token,
+					track_id: track_id
+				}
+			);
 		}
 		counter = setInterval(countdown, 1000);
 		$(this).addClass('sr-only').siblings('.fa-pause').removeClass('sr-only').parent().siblings('.song').find('.fa-pause').addClass('sr-only').siblings('.fa-play').removeClass('sr-only');
@@ -134,6 +203,10 @@ $(function() {
 		clearInterval(counter);
 		$(this).addClass('sr-only').siblings('.fa-play').removeClass('sr-only');
 		$('.player-controls-buttons .fa-pause').addClass('sr-only').siblings('.fa-play').removeClass('sr-only');
+	}).on('click', '#reset-mood', function() {
+		$.post(
+			'/reset_mood/'
+		);
 	});
 
 	$('.main-view').on('click', '.fal.fa-heart', function() {
@@ -343,7 +416,9 @@ $(function() {
 	});
 
 	// display account settings
-	$('.top-bar').on('click', '#account', function() {
+	$('.cr_pl').on('click', '#account', function() {
+		$(this).css('color', '#fed667');
+		$('.sidebar-nav').children().removeClass('active');
 		$.post(
 			'/account/',
 			function(data) {
