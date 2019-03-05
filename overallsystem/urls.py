@@ -8,6 +8,7 @@ urlpatterns = [
 	path('get_auth_code/', views.get_auth_code),
 	path('get_token/', views.get_token),
 	path('play_song/', views.play_song),
+	path('get_progress/', views.get_progress),
 	path('set_volume/', views.set_volume),
 	path('signup/', views.signup),
   path('login/', auth_views.LoginView.as_view(redirect_authenticated_user=True, template_name='overallsystem/login.html')),

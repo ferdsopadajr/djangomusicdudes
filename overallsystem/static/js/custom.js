@@ -12,31 +12,26 @@ var refresh_token;
 
 $(function() {
 	$.ajaxSetup({async: false, data: {csrfmiddlewaretoken:window.CSRF_TOKEN}});
-	// timer
-	function countdown() {
-		var reducer = 1000;
-		if (listening_duration < 1000 && listening_duration > 0) {
-			reducer = listening_duration;
-		}
-		listening_duration -= reducer;
-		width = 100 - ((listening_duration / track_max_duration) * 100);
-		document.getElementById('playback-bar').style.width = width+'%';
-		document.getElementById('playback-bar').setAttribute('aria-valuenow', track_max_duration - listening_duration);
-		if (listening_duration <= 0) {
-			clearInterval(counter);
-			return;
-		}
+	//get_progress
+	function getProgress() {
 		$.post(
-			'/convert_time/',
+			'/get_progress/',
 			{
-				play_duration: track_max_duration-listening_duration
+				access_token: access_token
 			},
 			function(data) {
-				$('#play-duration').text(data);
+				var response = JSON.parse(data);
+				listening_duration = response.not_converted;
+				$('#play-duration').text(response.converted);
+				console.log(listening_duration);
+				console.log(track_max_duration);
+				var width = (listening_duration / track_max_duration) * 100;
+				document.getElementById('playback-bar').style.width = width+'%';
+				document.getElementById('playback-bar').setAttribute('aria-valuenow', track_max_duration - listening_duration);
 			}
 		);
 	}
-	//slider
+	//volume
 	function setVolume(volume) {
 		$.post(
 			'/set_volume/',
@@ -93,7 +88,6 @@ $(function() {
 					auth_code: auth_code
 				},
 				function(data) {
-					console.log(data);
 					var response = JSON.parse(data);
 					access_token = response.access_token;
 					refresh_token = response.refresh_token;
@@ -115,7 +109,7 @@ $(function() {
 			past_track = $('.controls-bar').attr('id');
 		}
 		if (past_track != track_id) {
-			clearInterval(counter);
+			// clearInterval(counter);
 			$(this).addClass('sr-only').siblings('.fa-pause').removeClass('sr-only').parent().siblings('.song').find('.fa-pause').addClass('sr-only').siblings('.fa-play').removeClass('sr-only');
 			$.post(
 				'/upd_cbl/',
@@ -196,7 +190,7 @@ $(function() {
 				}
 			);
 		}
-		counter = setInterval(countdown, 1000);
+		counter = setInterval(getProgress, 1000);
 		$(this).addClass('sr-only').siblings('.fa-pause').removeClass('sr-only').parent().siblings('.song').find('.fa-pause').addClass('sr-only').siblings('.fa-play').removeClass('sr-only');
 		$('.player-controls-buttons .fa-play').addClass('sr-only').siblings('.fa-pause').removeClass('sr-only');
 	}).on('click', '.fa-pause', function() {

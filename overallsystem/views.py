@@ -9,6 +9,7 @@ from datetime import timedelta, datetime
 from statistics import mean
 from .forms import MainForm, CreateUserForm
 from .models import *
+import json
 
 def get_auth_code(request):
 	return HttpResponse(acc_spot.get_auth_code())
@@ -18,6 +19,10 @@ def get_token(request):
 
 def play_song(request):
 	return HttpResponse(acc_spot.play_song(request.POST['access_token'], request.POST['refresh_token'], request.POST['track_id']))
+
+def get_progress(request):
+	progress = acc_spot.get_progress(request.POST['access_token'])
+	return HttpResponse(json.dumps({'not_converted' : progress, 'converted' : datetime.fromtimestamp(int(progress)/1000).strftime('%#M:%S')}))
 
 def set_volume(request):
 	return HttpResponse(acc_spot.set_volume(request.POST['access_token'], request.POST['volume']))

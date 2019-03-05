@@ -49,6 +49,8 @@
   }
 }
 body {
+  height: 100vw;
+  background: #36273c;
   color: #cac0c9;
   font-size: 14px;
   letter-spacing: .015em;
@@ -522,7 +524,7 @@ a:hover {
 .main-view {
   position: absolute;
   display: flex;
-  background: linear-gradient(to right bottom, #36273c, #65521c) no-repeat;
+  background: linear-gradient(to right bottom, #36273c, #65521c);
   height: 79.8%;
   width: 100%;
   user-select: none;

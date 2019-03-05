@@ -25,6 +25,12 @@ def play_song(access_token, refresh_token, track):
 		play_song(response.json['access_token'], refresh_token, track)
 	return response
 
+def get_progress(access_token):
+	endpoint = 'https://api.spotify.com/v1/me/player/currently-playing'
+	headers = {'Authorization' : 'Bearer ' + access_token, 'Accept' : 'application/json', 'Content-Type' : 'application/json'}
+	response = requests.get(endpoint, headers = headers)
+	return response.json()['progress_ms']
+
 def set_volume(access_token, volume):
 	endpoint = 'https://api.spotify.com/v1/me/player/volume'
 	headers = {'Authorization' : 'Bearer ' + access_token, 'Accept' : 'application/json', 'Content-Type' : 'application/json'}

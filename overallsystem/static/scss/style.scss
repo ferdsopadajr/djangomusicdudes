@@ -83,6 +83,8 @@ $controls: #402f4c;
 	}
 }
 body {
+	height: 100vw;
+	background: $sidebar-bg;
 	color: $secondary;
 	font-size: 14px;
 	letter-spacing: .015em;
@@ -511,7 +513,7 @@ a {
 }
 /* main view */
 .main-view {
-	@include property(absolute, flex, linear-gradient(to right bottom, #36273c, #65521c) no-repeat, 79.8%, 100%);
+	@include property(absolute, flex, linear-gradient(to right bottom, #36273c, #65521c), 79.8%, 100%);
 	min-width: 963.14px;
 	top: 50px;
 	z-index: -2;
